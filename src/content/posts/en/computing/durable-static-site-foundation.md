@@ -9,7 +9,6 @@ tags: [Astro, architecture, maintenance]
 author: DrLeeWorks
 summary: A practical content-first structure for a technical website that can evolve without an early backend.
 recommended: true
-sample: false
 draft: false
 ---
 
@@ -27,5 +26,3 @@ An article can still include code:
 ```ts
 const releaseChannel = 'github-releases';
 ```
-
-This sample is intentionally available only in English to demonstrate graceful handling of untranslated posts.

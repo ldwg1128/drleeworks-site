@@ -9,7 +9,6 @@ tags: [문서화, 연구, 재현성]
 author: DrLeeWorks
 summary: 계산, 실험 조건과 판단 근거를 나중에도 재현할 수 있도록 기록하는 기본 구조를 소개합니다.
 recommended: true
-sample: false
 draft: false
 ---
 
@@ -33,5 +32,3 @@ $$E = \frac{1}{2}kx^2$$
 ```python
 energy = 0.5 * stiffness * displacement**2
 ```
-
-> 이 글은 콘텐츠 형식과 수식·표·코드 렌더링을 보여 주는 예시입니다.

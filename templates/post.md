@@ -13,7 +13,6 @@ author: DrLeeWorks
 summary: 목록과 검색 결과에 표시할 짧은 설명입니다.
 # featuredImage: ../../../assets/posts/YYYY/post-name/cover.webp
 recommended: false
-sample: false
 draft: true
 ---
 

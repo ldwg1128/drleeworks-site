@@ -25,7 +25,7 @@ const posts = defineCollection({
     title: z.string(), slug: z.string(), lang: z.enum(['ko', 'en']), translationKey: z.string(),
     published: z.coerce.date(), updated: z.coerce.date().optional(), category: z.string(), tags: z.array(z.string()),
     author: z.enum(AUTHORS), summary: z.string(), featuredImage: image().optional(),
-    recommended: z.boolean().default(false), sample: z.boolean().default(false), draft: z.boolean().default(false)
+    recommended: z.boolean().default(false), draft: z.boolean().default(false)
   }).superRefine((post, ctx) => {
     const allowed = POST_CATEGORIES[post.lang] as readonly string[];
     if (!allowed.includes(post.category)) ctx.addIssue({
