@@ -1,5 +1,0 @@
----
-import {getCollection} from 'astro:content';import BaseLayout from '../../../layouts/BaseLayout.astro';import PostCard from '../../../components/PostCard.astro';import {ui,type Lang} from '../../../i18n/ui';
-export function getStaticPaths(){return (['ko','en'] as Lang[]).map(lang=>({params:{lang},props:{lang}}));}const {lang}=Astro.props as {lang:Lang};const t=ui[lang];const posts=(await getCollection('posts',({data})=>data.lang===lang&&!data.draft)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
----
-<BaseLayout {lang} title={`${t.blog} | DrLeeWorks`} description={t.blogIntro}><header class="page-head"><div class="container"><h1>{t.blog}</h1><p class="lead">{t.blogIntro}</p></div></header><section class="section"><div class="container grid">{posts.map(post=><PostCard {post} {lang}/>)}</div></section></BaseLayout>

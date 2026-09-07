@@ -20,9 +20,9 @@ const software = defineCollection({
 });
 
 const posts = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts', generateId: ({ entry }) => entry }),
   schema: ({ image }) => z.object({
-    title: z.string(), slug: z.string(), lang: z.enum(['ko', 'en']), translationKey: z.string().optional(),
+    title: z.string(), slug: z.string(), lang: z.enum(['ko', 'en']), translationKey: z.string(),
     published: z.coerce.date(), updated: z.coerce.date().optional(), category: z.string(), tags: z.array(z.string()),
     author: z.enum(AUTHORS), summary: z.string(), featuredImage: image().optional(),
     recommended: z.boolean().default(false), sample: z.boolean().default(false), draft: z.boolean().default(false)
@@ -38,9 +38,5 @@ const posts = defineCollection({
   })
 });
 
-const engineering = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/engineering', generateId: ({ entry }) => entry }),
-  schema: z.object({ title: z.string(), slug: z.string(), lang: z.enum(['ko', 'en']), summary: z.string(), order: z.number() })
-});
 
-export const collections = { software, posts, engineering };
+export const collections = { software, posts };

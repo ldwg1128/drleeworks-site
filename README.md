@@ -13,8 +13,7 @@ src/
   components/           Shared header, footer, and cards
   content/
     software/           Structured product records
-    posts/{ko,en}/      Blog Markdown/MDX
-    engineering/{ko,en}/ Engineering notes
+    posts/{ko,en}/      Post Markdown/MDX
   i18n/                 Central UI translations
   layouts/              Shared page and article shells
   pages/[lang]/         Korean and English static routes
@@ -52,9 +51,9 @@ Copy `templates/software-page.md` to `src/content/software/<slug>.md`. Both loca
 
 To publish a release, change `version`, `releaseDate`, `downloadUrl`, `sha256`, signature/publisher details, and `changelog`. Link `downloadUrl` to the exact GitHub Release asset when available.
 
-## Adding a blog post
+## Adding a post
 
-Copy `templates/blog-post.md` into `src/content/posts/ko/` or `src/content/posts/en/`. Match `lang` to the folder and set `draft: false` when ready. An article does not require a translation. For paired translations, give both files the same `translationKey`; the article page will link the pair.
+Copy `templates/post.md` into `src/content/posts/ko/` or `src/content/posts/en/`. Match `lang` to the folder and set `draft: false` when ready. An article does not require a translation. For paired translations, give both files the same `translationKey`; the article page will link the pair.
 
 Markdown supports headings, tables, fenced code, links, and math using `$...$` or `$$...$$`. MDX files may use the `.mdx` extension.
 
@@ -63,12 +62,12 @@ Markdown supports headings, tables, fenced code, links, and math using `$...$` o
 For straightforward, CDN-portable URLs, put images in:
 
 ```text
-public/images/blog/YYYY/post-name/
+public/images/posts/YYYY/post-name/
 ```
 
-Then reference `/images/blog/YYYY/post-name/figure-01.png` in Markdown. Use meaningful alt text and optimized WebP/AVIF where practical. Because paths are centralized and predictable, a future R2/CDN migration can use redirects or an asset-base helper without rewriting article prose.
+Then reference `/images/posts/YYYY/post-name/figure-01.png` in Markdown. Use meaningful alt text and optimized WebP/AVIF where practical. Because paths are centralized and predictable, a future R2/CDN migration can use redirects or an asset-base helper without rewriting article prose.
 
-For Astro-optimized featured images, place source images under `src/assets/blog/...` and use the relative `featuredImage` field shown in the template.
+For Astro-optimized featured images, place source images under `src/assets/posts/...` and use the relative `featuredImage` field shown in the template.
 
 ## Localization
 

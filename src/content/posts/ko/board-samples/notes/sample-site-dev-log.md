@@ -1,6 +1,7 @@
 ---
 title: DrLeeWorks 사이트 개발 기록
 slug: drleeworks-site-development-log
+translationKey: drleeworks-site-development-log
 lang: ko
 published: 2026-09-01
 category: 기록

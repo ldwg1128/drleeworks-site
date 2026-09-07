@@ -1,6 +1,7 @@
 ---
 title: 오픈소스 소프트웨어를 활용하는 방법
 slug: open-source-software-workflow
+translationKey: open-source-software-workflow
 lang: ko
 published: 2026-09-07
 category: 컴퓨팅

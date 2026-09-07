@@ -18,7 +18,7 @@ const summary = lang === 'ko' ? '여기에 글의 짧은 요약을 작성하세�
 const opening = lang === 'ko' ? '첫 문단을 작성하세요.' : 'Write the opening paragraph.';
 const heading = lang === 'ko' ? '첫 번째 소제목' : 'First section';
 const body = lang === 'ko' ? '본문을 작성하세요.' : 'Write the article body.';
-const content = `---\ntitle: ${title}\nslug: ${slug}\nlang: ${lang}\npublished: ${date}\ncategory: ${categories[lang][section]}\ntags: []\nauthor: DrLeeWorks\nsummary: ${summary}\nrecommended: false\nsample: false\ndraft: true\n---\n\n${opening}\n\n## ${heading}\n\n${body}\n`;
+const content = `---\ntitle: ${title}\nslug: ${slug}\ntranslationKey: ${slug}\nlang: ${lang}\npublished: ${date}\ncategory: ${categories[lang][section]}\ntags: []\nauthor: DrLeeWorks\nsummary: ${summary}\nrecommended: false\nsample: false\ndraft: true\n---\n\n${opening}\n\n## ${heading}\n\n${body}\n`;
 await mkdir(directory, { recursive: true });
 await writeFile(file, content, { flag: 'wx' });
 console.log(path.relative(process.cwd(), file));

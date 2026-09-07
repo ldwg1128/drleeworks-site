@@ -1,6 +1,7 @@
 ---
 title: Building a Durable Static Site Foundation
 slug: durable-static-site-foundation
+translationKey: durable-static-site-foundation
 lang: en
 published: 2026-09-07
 category: Computing

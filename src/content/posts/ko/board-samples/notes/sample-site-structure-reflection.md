@@ -1,6 +1,7 @@
 ---
 title: 사이트 구조를 수정하면서 느낀 점
 slug: reflections-on-site-structure
+translationKey: reflections-on-site-structure
 lang: ko
 published: 2026-08-30
 category: 기록

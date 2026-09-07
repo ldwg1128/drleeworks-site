@@ -1,6 +1,7 @@
 ---
 title: 개인 프로젝트를 정리하는 방법
 slug: organizing-personal-projects
+translationKey: organizing-personal-projects
 lang: ko
 published: 2026-08-31
 category: 기록

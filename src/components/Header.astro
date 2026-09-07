@@ -2,7 +2,7 @@
 import { languages, type Lang } from '../i18n/ui';
 import { localizedPath, switchLanguagePath } from '../utils/routes';
 import { getGlobalNavigation } from '../config/navigation';
-interface Props { lang: Lang; alternateHref?: string; }
+interface Props { lang: Lang; alternateHref?: string | null; }
 const { lang, alternateHref } = Astro.props;
 const pathname = Astro.url.pathname;
 const items = getGlobalNavigation(lang);
@@ -15,7 +15,11 @@ const isCurrent = (path: string) => path ? pathname.startsWith(`/${lang}${path}`
       {items.map(({path, label}) => <a href={localizedPath(lang, path)} aria-current={isCurrent(path) ? 'page' : undefined}>{label}</a>)}
     </nav>
     <div class="language" aria-label="Language">
-      {(Object.entries(languages) as [Lang,string][]).map(([code, label]) => <a class:list={{active:code===lang}} href={code === lang ? pathname : (alternateHref ?? switchLanguagePath(pathname, code))} hreflang={code}>{label}</a>)}
+      {(Object.entries(languages) as [Lang,string][]).map(([code, label]) => {
+        if (code === lang) return <a class="active" href={pathname} hreflang={code} aria-current="page">{label}</a>;
+        if (alternateHref === null) return <span class="unavailable" aria-disabled="true" title={code === 'ko' ? '한국어 번역이 없습니다.' : 'English translation is not available.'}>{label}</span>;
+        return <a href={alternateHref ?? switchLanguagePath(pathname, code)} hreflang={code}>{label}</a>;
+      })}
     </div>
   </div>
 </header>

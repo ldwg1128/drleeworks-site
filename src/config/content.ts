@@ -21,6 +21,7 @@ export const categoryPath = (lang: Lang, category: string) => {
     ko: { 컴퓨팅: '/computing', 공학: '/engineering', 기록: '/notes' },
     en: { Computing: '/computing', Engineering: '/engineering', Notes: '/notes' }
   };
-  return paths[lang][category] ?? '/blog';
+  const result = paths[lang][category];
+  if (!result) throw new Error(`Unknown category for ${lang}: ${category}`);
+  return result;
 };
-

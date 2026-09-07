@@ -1,6 +1,7 @@
 ---
 title: 천연섬유 복합재료의 기본 특성
 slug: basic-properties-of-natural-fiber-composites
+translationKey: basic-properties-of-natural-fiber-composites
 lang: ko
 published: 2026-09-04
 category: 공학

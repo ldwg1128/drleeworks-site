@@ -1,6 +1,7 @@
 ---
 title: 유한요소해석에서 메쉬 크기의 영향
 slug: mesh-size-effects-in-finite-element-analysis
+translationKey: mesh-size-effects-in-finite-element-analysis
 lang: ko
 published: 2026-09-03
 category: 공학

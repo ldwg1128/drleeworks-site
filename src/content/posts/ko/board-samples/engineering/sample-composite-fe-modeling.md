@@ -1,6 +1,7 @@
 ---
 title: 복합재료 구조물의 유한요소 모델링
 slug: finite-element-modeling-of-composite-structures
+translationKey: finite-element-modeling-of-composite-structures
 lang: ko
 published: 2026-09-02
 category: 공학

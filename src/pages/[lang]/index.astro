@@ -12,7 +12,6 @@ const software = (await getCollection('software'))[0];
 const posts = (await getCollection('posts', ({data}) => !data.draft && data.lang === lang)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
 const recommended = posts.filter(post => post.data.recommended).slice(0, 2);
 const recent = posts.slice(0, 3);
-const engineering = (await getCollection('engineering', ({data}) => data.lang === lang)).sort((a,b)=>a.data.order-b.data.order).slice(0, 2);
 ---
 <BaseLayout {lang} title="DrLeeWorks" description={t.intro}>
   <section class="hero hero-compact"><div class="container"><div class="eyebrow">DrLeeWorks</div><h1>{t.tagline}</h1><p class="lead">{t.intro}</p></div></section>
@@ -38,7 +37,6 @@ const engineering = (await getCollection('engineering', ({data}) => data.lang ==
       <div class="content-feed">
         {recent.map(post => <PostCard {post} {lang} />)}
         <article class="feed-item card"><div class="meta">{t.software}</div><h3><a href={localizedPath(lang, `/software/${software.data.slug}`)}>{software.data.name}</a></h3><p>{software.data.description[lang]}</p></article>
-        {engineering.map(note => <article class="feed-item card"><div class="meta">{t.engineering}</div><h3><a href={localizedPath(lang, `/engineering/${note.data.slug}`)}>{note.data.title}</a></h3><p>{note.data.summary}</p></article>)}
       </div>
     </SidebarShell>
   </section>

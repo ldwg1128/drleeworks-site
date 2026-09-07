@@ -1,11 +1,11 @@
 # Content Guide
 
-## New blog article
+## New article
 
-1. Copy `templates/blog-post.md` to `src/content/posts/ko/<slug>.md` or `src/content/posts/en/<slug>.md`.
+1. Copy `templates/post.md` to `src/content/posts/ko/<slug>.md` or `src/content/posts/en/<slug>.md`.
 2. Use a short lowercase ASCII slug with hyphens. Keep `slug` and the public URL stable after publication.
 3. Fill the frontmatter, write the article, and keep `draft: true` while editing.
-4. Put public inline images in `public/images/blog/YYYY/<slug>/`; number figures predictably (`figure-01.webp`).
+4. Put public inline images in `public/images/posts/YYYY/<slug>/`; number figures predictably (`figure-01.webp`).
 5. Add descriptive alt text, cite original sources, and do not commit unlicensed images.
 6. Run `npm run check` and `npm run build`, then set `draft: false`.
 
@@ -23,10 +23,6 @@ Copy `templates/software-page.md` to `src/content/software/<slug>.md`. Release b
 - changelog, known issues, bug-report URL, and license
 
 Never publish a checksum copied from an unverified intermediate build.
-
-## Engineering notes
-
-Add language-specific Markdown under `src/content/engineering/ko/` or `en/`. These records use the same prose rendering as blog articles and can contain tables, code, equations, and images.
 
 ## Images
 

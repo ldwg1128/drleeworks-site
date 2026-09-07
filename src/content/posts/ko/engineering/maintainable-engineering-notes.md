@@ -1,6 +1,7 @@
 ---
 title: 유지 가능한 공학 노트를 작성하는 방법
 slug: maintainable-engineering-notes
+translationKey: maintainable-engineering-notes
 lang: ko
 published: 2026-09-07
 category: 공학

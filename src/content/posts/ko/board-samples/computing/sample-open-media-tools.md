@@ -1,6 +1,7 @@
 ---
 title: 유용한 오픈소스 미디어 도구 정리
 slug: useful-open-source-media-tools
+translationKey: useful-open-source-media-tools
 lang: ko
 published: 2026-09-05
 category: 컴퓨팅

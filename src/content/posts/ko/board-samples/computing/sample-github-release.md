@@ -1,6 +1,7 @@
 ---
 title: GitHub Release를 이용한 프로그램 배포
 slug: program-distribution-with-github-release
+translationKey: program-distribution-with-github-release
 lang: ko
 published: 2026-09-06
 category: 컴퓨팅
