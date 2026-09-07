@@ -7,6 +7,7 @@ category: 컴퓨팅
 tags: [오픈소스]
 author: DrLeeWorks
 summary: 오픈소스 소프트웨어를 선택하고 개인 작업 흐름에 안전하게 도입하는 기준을 정리합니다.
+sample: true
 draft: false
 ---
 

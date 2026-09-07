@@ -7,6 +7,7 @@ category: 공학
 tags: [유한요소해석]
 author: DrLeeWorks
 summary: 메쉬 크기가 해석 정확도와 계산 비용에 미치는 영향을 기본적인 수렴 관점에서 설명합니다.
+sample: true
 draft: false
 ---
 

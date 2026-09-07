@@ -43,3 +43,27 @@ Add language-specific Markdown under `src/content/engineering/ko/` or `en/`. The
 - Heading levels are sequential and image alt text is meaningful.
 - Korean and English UI routes both build.
 - No secrets, private data, local file paths, or unreleased binaries are committed.
+
+## Long-term publishing fields
+
+- `recommended: true` selects a published post for the home recommendation area. Recommendations are still ordered by `published` and limited to two per language.
+- `sample: true` identifies removable demonstration content; it does not hide the post.
+- `featuredImage` is rendered in cards, article headers, and social metadata.
+- `updated` is displayed on the article page and must not be earlier than `published`.
+- Authors and localized categories are centralized in `src/config/content.ts`.
+
+Create a draft with:
+
+```bash
+npm run post:new -- ko engineering my-post-slug "게시물 제목"
+```
+
+Valid sections are `computing`, `engineering`, and `notes`. The command creates a non-overwriting `draft: true` file in the matching language/category folder.
+
+## YouTube
+
+Use an `.mdx` article, import `YouTube` from `src/components/YouTube.astro`, and render `<YouTube id="VIDEO_ID" title="Accessible title" />`. It uses YouTube's privacy-enhanced domain and a responsive 16:9 layout.
+
+`npm run content:check` rejects language-folder mismatches, malformed or duplicate slugs, and duplicate translation keys within one language. Both `npm run check` and `npm run build` include this validation.
+
+Sample board posts remain isolated under `src/content/posts/ko/board-samples/` and carry `sample: true` for easy removal.

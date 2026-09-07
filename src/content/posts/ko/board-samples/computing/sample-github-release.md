@@ -7,6 +7,7 @@ category: 컴퓨팅
 tags: [개발]
 author: DrLeeWorks
 summary: 버전 태그부터 배포 파일과 변경 사항까지 GitHub Release로 관리하는 기본 흐름입니다.
+sample: true
 draft: false
 ---
 

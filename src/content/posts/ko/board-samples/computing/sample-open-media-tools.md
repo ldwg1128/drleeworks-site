@@ -7,6 +7,7 @@ category: 컴퓨팅
 tags: [오픈소스, 개발]
 author: DrLeeWorks
 summary: 미디어 처리 작업에 활용할 수 있는 오픈소스 도구를 선택하고 조합하는 관점을 소개합니다.
+sample: true
 draft: false
 ---
 

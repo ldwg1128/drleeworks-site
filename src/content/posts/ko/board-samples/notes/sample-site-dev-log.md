@@ -7,6 +7,7 @@ category: 기록
 tags: [개발기록]
 author: DrLeeWorks
 summary: DrLeeWorks 사이트의 콘텐츠 중심 구조와 한영 route를 정리한 짧은 개발 기록입니다.
+sample: true
 draft: false
 ---
 

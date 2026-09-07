@@ -7,6 +7,7 @@ category: 공학
 tags: [복합재료]
 author: DrLeeWorks
 summary: 천연섬유 복합재료의 경량성, 물성 편차와 계면 특성을 간단히 살펴봅니다.
+sample: true
 draft: false
 ---
 

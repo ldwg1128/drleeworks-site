@@ -7,6 +7,7 @@ category: 공학
 tags: [복합재료, 유한요소해석]
 author: DrLeeWorks
 summary: 복합재료의 방향성과 적층 정보를 유한요소 모델에 반영할 때 필요한 기본 항목을 정리합니다.
+sample: true
 draft: false
 ---
 

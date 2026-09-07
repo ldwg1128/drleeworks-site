@@ -10,7 +10,7 @@ const { lang } = Astro.props as { lang: Lang };
 const t = ui[lang];
 const software = (await getCollection('software'))[0];
 const posts = (await getCollection('posts', ({data}) => !data.draft && data.lang === lang)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
-const recommended = posts.slice(0, 2);
+const recommended = posts.filter(post => post.data.recommended).slice(0, 2);
 const recent = posts.slice(0, 3);
 const engineering = (await getCollection('engineering', ({data}) => data.lang === lang)).sort((a,b)=>a.data.order-b.data.order).slice(0, 2);
 ---

@@ -3,10 +3,12 @@ title: Building a Durable Static Site Foundation
 slug: durable-static-site-foundation
 lang: en
 published: 2026-09-07
-category: Software Development
+category: Computing
 tags: [Astro, architecture, maintenance]
 author: DrLeeWorks
 summary: A practical content-first structure for a technical website that can evolve without an early backend.
+recommended: true
+sample: false
 draft: false
 ---
 

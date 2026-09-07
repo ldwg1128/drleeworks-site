@@ -1,12 +1,16 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import type { Lang } from '../i18n/ui';
 import { formatDate, localizedPath } from '../utils/routes';
+import { categoryPath } from '../config/content';
 const { post, lang } = Astro.props as { post: CollectionEntry<'posts'>, lang: Lang };
+const filterPath = localizedPath(lang, categoryPath(lang, post.data.category));
 ---
-<article class="card">
-  <div class="meta">{formatDate(post.data.published, lang)} · {post.data.category}</div>
+<article class="card post-card">
+  {post.data.featuredImage && <a class="post-card-image" href={localizedPath(lang, `/blog/${post.data.slug}`)} aria-label={post.data.title}><Image src={post.data.featuredImage} alt="" /></a>}
+  <div class="meta">{formatDate(post.data.published, lang)} · <a href={filterPath}>{post.data.category}</a></div>
   <h3><a href={localizedPath(lang, `/blog/${post.data.slug}`)}>{post.data.title}</a></h3>
   <p>{post.data.summary}</p>
-  <div>{post.data.tags.map(tag => <span class="tag">#{tag}</span>)}</div>
+  <div class="post-tags" aria-label="Tags">{post.data.tags.map(tag => <a class="tag" href={`${filterPath}?tag=${encodeURIComponent(tag)}`}>#{tag}</a>)}</div>
 </article>

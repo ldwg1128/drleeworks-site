@@ -3,10 +3,12 @@ title: 유지 가능한 공학 노트를 작성하는 방법
 slug: maintainable-engineering-notes
 lang: ko
 published: 2026-09-07
-category: Engineering Practice
+category: 공학
 tags: [문서화, 연구, 재현성]
 author: DrLeeWorks
 summary: 계산, 실험 조건과 판단 근거를 나중에도 재현할 수 있도록 기록하는 기본 구조를 소개합니다.
+recommended: true
+sample: false
 draft: false
 ---
 

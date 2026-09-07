@@ -4,12 +4,13 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import SidebarShell from '../../../components/SidebarShell.astro';
 import BoardPage from '../../../components/BoardPage.astro';
 import type { Lang } from '../../../i18n/ui';
+import { BOARD_CATEGORIES } from '../../../config/content';
 export function getStaticPaths(){return (['ko','en'] as Lang[]).map(lang=>({params:{lang},props:{lang}}));}
 const {lang}=Astro.props as {lang:Lang};
 const copy={ko:{title:'기록',intro:'개발과 일상에서 남긴 짧은 기록입니다.',heading:'기록 게시물'},en:{title:'Notes',intro:'Short notes from development work and daily life.',heading:'Notes'}} as const;
 const page=copy[lang];
-const categories=lang==='ko'?['기록']:['Notes'];
-const posts=(await getCollection('posts',({data})=>!data.draft&&data.lang===lang&&categories.includes(data.category))).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
+const category=BOARD_CATEGORIES.notes[lang];
+const posts=(await getCollection('posts',({data})=>!data.draft&&data.lang===lang&&data.category===category)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
 ---
 <BaseLayout {lang} title={`${page.title} | DrLeeWorks`} description={page.intro}>
   <header class="page-head"><div class="container"><h1>{page.title}</h1><p class="lead">{page.intro}</p></div></header>

@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { AUTHORS, POST_CATEGORIES } from './config/content';
 
 const localized = z.object({ ko: z.string(), en: z.string() });
 
@@ -23,7 +24,17 @@ const posts = defineCollection({
   schema: ({ image }) => z.object({
     title: z.string(), slug: z.string(), lang: z.enum(['ko', 'en']), translationKey: z.string().optional(),
     published: z.coerce.date(), updated: z.coerce.date().optional(), category: z.string(), tags: z.array(z.string()),
-    author: z.string(), summary: z.string(), featuredImage: image().optional(), draft: z.boolean().default(false)
+    author: z.enum(AUTHORS), summary: z.string(), featuredImage: image().optional(),
+    recommended: z.boolean().default(false), sample: z.boolean().default(false), draft: z.boolean().default(false)
+  }).superRefine((post, ctx) => {
+    const allowed = POST_CATEGORIES[post.lang] as readonly string[];
+    if (!allowed.includes(post.category)) ctx.addIssue({
+      code: 'custom', path: ['category'],
+      message: `${post.lang} 게시물 category는 ${allowed.join(', ')} 중 하나여야 합니다.`
+    });
+    if (post.updated && post.updated < post.published) ctx.addIssue({
+      code: 'custom', path: ['updated'], message: 'updated는 published보다 빠를 수 없습니다.'
+    });
   })
 });
 
@@ -33,4 +44,3 @@ const engineering = defineCollection({
 });
 
 export const collections = { software, posts, engineering };
-

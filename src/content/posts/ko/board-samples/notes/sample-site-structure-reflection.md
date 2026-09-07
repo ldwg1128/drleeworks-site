@@ -7,6 +7,7 @@ category: 기록
 tags: [개발기록, 일상]
 author: DrLeeWorks
 summary: 콘텐츠가 늘어날 때를 가정해 사이트 navigation과 게시판 구조를 조정한 과정에서 얻은 메모입니다.
+sample: true
 draft: false
 ---
 

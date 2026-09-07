@@ -7,6 +7,7 @@ category: 기록
 tags: [일상]
 author: DrLeeWorks
 summary: 여러 개인 프로젝트의 목적, 상태와 다음 행동을 부담 없이 정리하는 방법을 기록합니다.
+sample: true
 draft: false
 ---
 

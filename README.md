@@ -106,3 +106,13 @@ To attach a custom domain later, add it in the Cloudflare Pages project's **Cust
 - sample/about wording that does not represent the final public identity
 
 See [docs/CONTENT_GUIDE.md](docs/CONTENT_GUIDE.md) for the short editorial workflow.
+
+## Editorial tooling
+
+Create a safe draft without copying files manually:
+
+```bash
+npm run post:new -- ko engineering my-post-slug "게시물 제목"
+```
+
+Use `recommended: true` for explicit home recommendations, `featuredImage` for card/article artwork, and the responsive `src/components/YouTube.astro` component from MDX. `npm run content:check` validates language folders, slugs, and translation keys before Astro checks and builds.
