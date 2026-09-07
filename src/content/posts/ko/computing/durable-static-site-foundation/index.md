@@ -5,10 +5,13 @@ translationKey: durable-static-site-foundation
 lang: ko
 published: 2026-09-07
 category: 컴퓨팅
-tags: [Astro, 아키텍처, 유지보수]
+tags:
+  - Astro
+  - 아키텍처
+  - 유지보수
 author: DrLeeWorks
 summary: 초기 백엔드 없이도 확장할 수 있는 콘텐츠 중심 기술 사이트 구조를 설명합니다.
-recommended: true
+recommended: false
 draft: false
 ---
 
