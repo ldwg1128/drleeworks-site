@@ -13,7 +13,7 @@ src/
   components/           Shared header, footer, and cards
   content/
     software/           Structured product records
-    posts/{ko,en}/      Post Markdown/MDX
+    posts/{ko,en}/      <section>/<post-folder>/index.md (or index.mdx) and images
   i18n/                 Central UI translations
   layouts/              Shared page and article shells
   pages/[lang]/         Korean and English static routes
@@ -35,6 +35,10 @@ npm run dev
 
 Open the local URL printed by Astro. The root redirects to `/ko/`.
 
+On this Windows workspace, run `.\dev.cmd` in PowerShell to start the site.
+The launcher uses the project-local Node.js installation in `.cache` when available.
+If PowerShell blocks `npm.ps1`, use `npm.cmd` instead of `npm`.
+
 Quality and production commands:
 
 ```bash
@@ -53,21 +57,23 @@ To publish a release, change `version`, `releaseDate`, `downloadUrl`, `sha256`, 
 
 ## Adding a post
 
-Copy `templates/post.md` into `src/content/posts/ko/` or `src/content/posts/en/`. Match `lang` to the folder and set `draft: false` when ready. An article does not require a translation. For paired translations, give both files the same `translationKey`; the article page will link the pair.
+Copy `templates/post.md` to `src/content/posts/<ko|en>/<computing|engineering|records>/<post-folder>/index.md`. Match `lang` and `category` to the folders and set `draft: false` when ready. Public URLs use the explicit frontmatter `slug`, not the filename or folder name. An article does not require a translation. For paired translations, give both files the same `translationKey`; the article page will link the pair.
 
 Markdown supports headings, tables, fenced code, links, and math using `$...$` or `$$...$$`. MDX files may use the `.mdx` extension.
 
 ## Article images
 
-For straightforward, CDN-portable URLs, put images in:
+Keep post images beside the article:
 
 ```text
-public/images/posts/YYYY/post-name/
+src/content/posts/ko/computing/post-name/
+  index.md
+  figure-01.png
 ```
 
-Then reference `/images/posts/YYYY/post-name/figure-01.png` in Markdown. Use meaningful alt text and optimized WebP/AVIF where practical. Because paths are centralized and predictable, a future R2/CDN migration can use redirects or an asset-base helper without rewriting article prose.
+Reference `![Description](./figure-01.png)` in Markdown. Astro processes local images during the build, and Obsidian can display the same standard Markdown. Existing `/images/...` references remain supported.
 
-For Astro-optimized featured images, place source images under `src/assets/posts/...` and use the relative `featuredImage` field shown in the template.
+For a cover/card image, use `featuredImage: ./figure-01.png`. See [the content guide](docs/CONTENT_GUIDE.md#obsidian) for Obsidian attachment settings.
 
 ## Localization
 

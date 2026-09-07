@@ -9,6 +9,7 @@ const expectedFolders = {
 };
 async function walk(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
+    if (entry.name.startsWith('.')) continue;
     const target = path.join(directory, entry.name);
     if (entry.isDirectory()) await walk(target);
     else if (/\.mdx?$/.test(entry.name)) files.push(target);
@@ -17,6 +18,7 @@ async function walk(directory) {
 await walk(root);
 
 const seen = new Map();
+const postFolders = new Map();
 const translations = new Map();
 const errors = [];
 for (const file of files) {
@@ -28,7 +30,15 @@ for (const file of files) {
   const slug = value('slug');
   const translationKey = value('translationKey');
   const relative = path.relative(root, file).replaceAll('\\', '/');
-  const [folderLang, categoryFolder] = relative.split('/');
+  const parts = relative.split('/');
+  const [folderLang, categoryFolder, postFolder, filename] = parts;
+  if (parts.length !== 4 || !/^index\.mdx?$/.test(filename ?? '')) {
+    errors.push(`${relative}: 게시물은 <언어>/<분류>/<게시물 폴더>/index.md 또는 index.mdx 구조여야 합니다.`);
+  }
+  // Folder names do not determine public slugs, but one folder must contain only one entry.
+  const folderId = `${folderLang}/${categoryFolder}/${postFolder}`;
+  if (postFolders.has(folderId)) errors.push(`${relative}: ${postFolders.get(folderId)}와 게시물 폴더가 중복됩니다. index.md와 index.mdx 중 하나만 사용하세요.`);
+  else postFolders.set(folderId, relative);
   if (!['ko', 'en'].includes(folderLang)) errors.push(`${relative}: 최상위 폴더는 ko 또는 en이어야 합니다.`);
   if (lang !== folderLang) errors.push(`${relative}: lang(${lang ?? '누락'})과 폴더(${folderLang})가 다릅니다.`);
   const expectedFolder = expectedFolders[lang]?.[category];

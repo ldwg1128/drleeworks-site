@@ -17,7 +17,8 @@ const software = defineCollection({
 });
 
 const posts = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts', generateId: ({ entry }) => entry }),
+  // File IDs are internal; public URLs continue to use the explicit frontmatter slug.
+  loader: glob({ pattern: '{ko,en}/{computing,engineering,records}/*/index.{md,mdx}', base: './src/content/posts', generateId: ({ entry }) => entry }),
   schema: ({ image }) => z.object({
     title: z.string(), slug: z.string(), lang: z.enum(['ko', 'en']), translationKey: z.string(),
     published: z.coerce.date(), updated: z.coerce.date().optional(), category: z.string(), tags: z.array(z.string()),

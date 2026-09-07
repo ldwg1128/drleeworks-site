@@ -11,7 +11,7 @@ tags:
   - tag-two
 author: DrLeeWorks
 summary: 목록과 검색 결과에 표시할 짧은 설명입니다.
-# featuredImage: ../../../assets/posts/YYYY/post-name/cover.webp
+# featuredImage: ./cover.webp
 recommended: false
 draft: true
 ---
@@ -20,12 +20,12 @@ Opening paragraph.
 
 ## First section
 
-Put article images in `public/images/posts/YYYY/post-name/` and reference them as:
+Save as `<lang>/<section>/<post-folder>/index.md`. Put images beside this file and reference them as:
 
-`![Useful alt text](/images/posts/YYYY/post-name/figure-01.webp)`
+`![Useful alt text](./figure-01.webp)`
 
-For YouTube, rename the article to `.mdx`, import the component, and use it:
+For YouTube, rename `index.md` to `index.mdx`, import the component, and use it:
 
-`import YouTube from '../../../components/YouTube.astro';`
+`import YouTube from '../../../../../components/YouTube.astro';`
 
 `<YouTube id="VIDEO_ID" title="Descriptive video title" />`
