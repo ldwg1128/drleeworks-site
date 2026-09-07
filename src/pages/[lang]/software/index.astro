@@ -11,5 +11,5 @@ const items=await getCollection('software');
 ---
 <BaseLayout {lang} title={`${t.software} | DrLeeWorks`} description={t.softwareIntro}>
   <header class="page-head"><div class="container"><h1>{t.software}</h1><p class="lead">{t.softwareIntro}</p></div></header>
-  <section class="section section-with-sidebar"><SidebarShell {lang}><div class="content-list">{items.map(item=><article class="card"><div class="meta">{t.version} {item.data.version}</div><h2><a href={localizedPath(lang,`/software/${item.data.slug}`)}>{item.data.name}</a></h2><p>{item.data.description[lang]}</p></article>)}</div></SidebarShell></section>
+  <section class="section section-with-sidebar"><SidebarShell {lang}><div class="content-list">{items.map(item=><article class="card software-card"><div class="meta">v{item.data.version}</div><h2><a href={localizedPath(lang,`/software/${item.data.slug}`)}>{item.data.name}</a></h2><p>{item.data.description[lang]}</p><div class="card-actions"><a class="button secondary" href={localizedPath(lang,`/software/${item.data.slug}`)}>{t.readMore}</a><a class="button" href={item.data.downloadUrl}>{t.download}</a></div></article>)}</div></SidebarShell></section>
 </BaseLayout>

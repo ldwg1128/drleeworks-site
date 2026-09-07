@@ -12,8 +12,9 @@ const software = defineCollection({
     features: z.object({ ko: z.array(z.string()), en: z.array(z.string()) }),
     requirements: localized, installation: localized,
     downloadUrl: z.string().url(), repositoryUrl: z.string().url(), releasesUrl: z.string().url(),
-    sha256: z.string(), publisher: z.string(), signature: localized,
-    changelog: localized, knownIssues: localized, bugReportUrl: z.string().url(), license: z.string()
+    assetFilename: z.string(), assetSize: z.number().optional(), distribution: z.string(),
+    sha256: z.string(), publisher: z.string(), certificateSubject: z.string(), certificateThumbprint: z.string(), signature: localized,
+    changelog: localized, knownIssues: localized.optional(), bugReportUrl: z.string().url(), license: z.string().optional()
   })
 });
 
@@ -32,3 +33,4 @@ const engineering = defineCollection({
 });
 
 export const collections = { software, posts, engineering };
+

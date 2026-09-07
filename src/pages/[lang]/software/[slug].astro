@@ -1,10 +1,43 @@
 ---
-import { getCollection, render } from 'astro:content'; import BaseLayout from '../../../layouts/BaseLayout.astro'; import {ui,type Lang} from '../../../i18n/ui'; import {formatDate} from '../../../utils/routes';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { ui, type Lang } from '../../../i18n/ui';
+import { formatDate } from '../../../utils/routes';
 export async function getStaticPaths(){const entries=await getCollection('software');return (['ko','en'] as Lang[]).flatMap(lang=>entries.map(entry=>({params:{lang,slug:entry.data.slug},props:{lang,entry}})));}
-const {lang,entry}=Astro.props; const locale=lang as Lang; const t=ui[locale]; const d=entry.data; const {Content}=await render(entry);
+const {lang,entry}=Astro.props;
+const locale=lang as Lang;
+const t=ui[locale];
+const d=entry.data;
+const size = d.assetSize ? new Intl.NumberFormat(locale === 'ko' ? 'ko-KR' : 'en-US', {style:'unit',unit:'megabyte',maximumFractionDigits:1}).format(d.assetSize / 1_000_000) : undefined;
 ---
 <BaseLayout lang={locale} title={`${d.name} | DrLeeWorks`} description={d.description[locale]}>
-  <header class="page-head"><div class="container"><div class="eyebrow">{t.software}</div><h1>{d.name}</h1><p class="lead">{d.description[lang]}</p><a class="button" href={d.downloadUrl}>{t.download} {d.version}</a></div></header>
-  <div class="container software-layout"><article class="prose"><h2>{t.features}</h2><ul>{d.features[locale].map((x:string)=><li>{x}</li>)}</ul><h2>{t.requirements}</h2><p>{d.requirements[locale]}</p><h2>{t.installation}</h2><p>{d.installation[locale]}</p><h2>{t.changelog}</h2><p>{d.changelog[locale]}</p><h2>{t.knownIssues}</h2><p>{d.knownIssues[locale]}</p><Content /></article>
-  <aside class="sidebar"><dl class="data-list"><dt>{t.version}</dt><dd>{d.version}</dd><dt>{t.released}</dt><dd>{formatDate(d.releaseDate,locale)}</dd><dt>{t.supportedOs}</dt><dd>{d.operatingSystems.join(', ')}</dd><dt>{t.verification} (SHA-256)</dt><dd><code>{d.sha256}</code></dd><dt>{t.signature}</dt><dd>{d.publisher}<br/>{d.signature[locale]}</dd><dt>{t.license}</dt><dd>{d.license}</dd></dl><h3>{t.links}</h3><p><a href={d.repositoryUrl}>{t.repository}</a><br/><a href={d.releasesUrl}>{t.releases}</a><br/><a href={d.bugReportUrl}>{t.bugReport}</a></p></aside></div>
+  <header class="page-head software-hero"><div class="container"><div class="eyebrow">{t.software}</div><h1>{d.name}</h1><div class="product-version">{t.version} {d.version}</div><p class="lead">{d.description[locale]}</p><div class="product-actions"><a class="button" href={d.downloadUrl}>{t.downloadWindows}</a><a class="release-link" href={d.releasesUrl}>{t.viewRelease} →</a></div></div></header>
+  <article class="container prose product-prose">
+    <section><h2>{t.overview}</h2><p>{d.description[locale]}</p></section>
+    <section><h2>{t.features}</h2><ul>{d.features[locale].map((feature:string)=><li>{feature}</li>)}</ul></section>
+    <section><h2>{t.requirements}</h2><p>{d.requirements[locale]}</p></section>
+    <section><h2>{t.installation}</h2><p>{d.installation[locale]}</p></section>
+    <section><h2>{t.changelog}</h2><p>{d.changelog[locale]}</p></section>
+    {d.knownIssues && <section><h2>{t.knownIssues}</h2><p>{d.knownIssues[locale]}</p></section>}
+    <section class="download-panel"><h2>{t.downloadInfo}</h2><dl class="download-grid">
+      <div><dt>{t.version}</dt><dd>{d.version}</dd></div>
+      <div><dt>{t.platform}</dt><dd>Windows 10 / 11 (x64)</dd></div>
+      <div><dt>{t.distribution}</dt><dd>{d.distribution}</dd></div>
+      <div><dt>{t.released}</dt><dd>{formatDate(d.releaseDate,locale)}</dd></div>
+      <div><dt>{t.assetFile}</dt><dd><code>{d.assetFilename}</code>{size && <span class="file-size"> · {size}</span>}</dd></div>
+      <div class="checksum-row"><dt>SHA-256</dt><dd><code data-checksum>{d.sha256}</code><button class="copy-button" type="button" data-copy-checksum data-copy-label={t.copy} data-copied-label={t.copied}>{t.copy}</button></dd></div>
+    </dl>
+    <div class="signature-info"><h3>{t.signature}</h3><p><strong>{d.publisher}</strong><br/><span>{d.signature[locale]}</span></p><details><summary>{locale==='ko'?'인증서 상세 정보':'Certificate details'}</summary><dl class="certificate-details"><dt>{t.certificateSubject}</dt><dd><code>{d.certificateSubject}</code></dd><dt>{t.certificateThumbprint}</dt><dd><code>{d.certificateThumbprint}</code></dd></dl></details></div>
+    <div class="download-links"><a class="button" href={d.downloadUrl}>{t.downloadWindows}</a><a href={d.releasesUrl}>{t.viewRelease}</a><a href={d.repositoryUrl}>{t.repository}</a><a href={d.bugReportUrl}>{t.bugReport}</a></div></section>
+  </article>
+  <script>
+    document.querySelectorAll<HTMLButtonElement>('[data-copy-checksum]').forEach(button => button.addEventListener('click', async () => {
+      const checksum = document.querySelector<HTMLElement>('[data-checksum]')?.textContent?.trim();
+      if (!checksum) return;
+      await navigator.clipboard.writeText(checksum);
+      button.textContent = button.dataset.copiedLabel ?? 'Copied';
+      window.setTimeout(() => button.textContent = button.dataset.copyLabel ?? 'Copy', 1500);
+    }));
+  </script>
 </BaseLayout>
+

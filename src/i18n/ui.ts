@@ -8,7 +8,7 @@ export const ui = {
     tagline: '독립 소프트웨어, 엔지니어링 도구와 기술 기록',
     intro: '직접 개발한 소프트웨어와 공학·연구 과정에서 얻은 지식을 정리하고 공유합니다.',
     featuredSoftware: '주요 소프트웨어', recommendedPosts: '추천 글', recentPosts: '최근 글', latestPosts: '최근 글', contentFeed: '새로운 콘텐츠', topics: '엔지니어링 / 연구 분야', aboutSite: 'DrLeeWorks 소개',
-    readMore: '자세히 보기', download: '다운로드', allSoftware: '소프트웨어 전체 보기', allPosts: '글 전체 보기',
+    readMore: '자세히 보기', download: '다운로드', downloadWindows: 'Windows용 다운로드', viewRelease: 'GitHub에서 릴리스 보기', overview: '개요', downloadInfo: '다운로드 정보', platform: '플랫폼', distribution: '배포 방식', assetFile: '배포 파일', fileSize: '파일 크기', certificateSubject: '인증서 Subject', certificateThumbprint: '인증서 지문', copy: '복사', copied: '복사됨', allSoftware: '소프트웨어 전체 보기', allPosts: '글 전체 보기',
     version: '버전', released: '출시일', supportedOs: '지원 운영체제', features: '주요 기능', requirements: '시스템 요구사항',
     installation: '설치 방법', verification: '파일 검증', signature: '디지털 서명', changelog: '변경 사항', knownIssues: '알려진 문제',
     links: '관련 링크', repository: 'GitHub 저장소', releases: 'GitHub Releases', bugReport: '버그 제보', license: '라이선스',
@@ -22,7 +22,7 @@ export const ui = {
     tagline: 'Independent software, engineering tools, and technical notes',
     intro: 'A home for independently developed software and practical knowledge from engineering and research.',
     featuredSoftware: 'Featured Software', recommendedPosts: 'Recommended Posts', recentPosts: 'Recent Posts', latestPosts: 'Latest Posts', contentFeed: 'Latest from DrLeeWorks', topics: 'Engineering / Research Topics', aboutSite: 'About DrLeeWorks',
-    readMore: 'Read more', download: 'Download', allSoftware: 'View all software', allPosts: 'View all posts',
+    readMore: 'Read more', download: 'Download', downloadWindows: 'Download for Windows', viewRelease: 'View release on GitHub', overview: 'Overview', downloadInfo: 'Download Information', platform: 'Platform', distribution: 'Distribution', assetFile: 'Release asset', fileSize: 'File size', certificateSubject: 'Certificate subject', certificateThumbprint: 'Certificate thumbprint', copy: 'Copy', copied: 'Copied', allSoftware: 'View all software', allPosts: 'View all posts',
     version: 'Version', released: 'Released', supportedOs: 'Supported OS', features: 'Main features', requirements: 'System requirements',
     installation: 'Installation', verification: 'File verification', signature: 'Digital signature', changelog: 'Changelog', knownIssues: 'Known issues',
     links: 'Links', repository: 'GitHub repository', releases: 'GitHub Releases', bugReport: 'Report a bug', license: 'License',
@@ -34,3 +34,4 @@ export const ui = {
 
 export const getLang = (value: string | undefined): Lang => value === 'en' ? 'en' : 'ko';
 export const useTranslations = (lang: Lang) => ui[lang];
+
