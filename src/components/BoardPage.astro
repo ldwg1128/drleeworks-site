@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Lang } from '../i18n/ui';
+import { ui } from '../i18n/ui';
+import PostCard from './PostCard.astro';
+const { lang, posts, heading } = Astro.props as { lang: Lang; posts: CollectionEntry<'posts'>[]; heading: string };
+const t = ui[lang];
+const tags = [...new Set(posts.flatMap(post => post.data.tags))].sort((a,b) => a.localeCompare(b, lang));
+---
+<section class="board" data-board>
+  <div class="board-heading">
+    <h2>{heading}</h2>
+    <p class="active-filter" data-active-filter hidden><span>{t.activeTagLabel}:</span> <strong data-active-tag></strong></p>
+  </div>
+  <div class="board-posts" data-post-list>
+    {posts.map(post => <div class="board-post" data-post data-tags={JSON.stringify(post.data.tags)}><PostCard {post} {lang}/></div>)}
+    <p class="board-empty" data-filter-empty hidden>{t.emptyPosts}</p>
+  </div>
+  <section class="tag-filter" aria-labelledby="tag-filter-title">
+    <h2 id="tag-filter-title">{t.tagsLabel}</h2>
+    <div class="tag-actions">
+      <button class="tag-filter-button is-active" type="button" data-tag="" aria-pressed="true">{t.allPostsLabel}</button>
+      {tags.map(tag => <button class="tag-filter-button" type="button" data-tag={tag} aria-pressed="false">#{tag}</button>)}
+    </div>
+  </section>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-board]').forEach(board => {
+    const buttons = [...board.querySelectorAll<HTMLButtonElement>('[data-tag]')];
+    const posts = [...board.querySelectorAll<HTMLElement>('[data-post]')];
+    const activeRow = board.querySelector<HTMLElement>('[data-active-filter]');
+    const activeText = board.querySelector<HTMLElement>('[data-active-tag]');
+    const empty = board.querySelector<HTMLElement>('[data-filter-empty]');
+    const available = new Set(buttons.map(button => button.dataset.tag).filter(Boolean));
+    const apply = (requested: string | null, updateUrl = false) => {
+      const tag = requested && available.has(requested) ? requested : '';
+      posts.forEach(post => {
+        const values = JSON.parse(post.dataset.tags ?? '[]') as string[];
+        post.hidden = Boolean(tag) && !values.includes(tag);
+      });
+      buttons.forEach(button => {
+        const selected = (button.dataset.tag ?? '') === tag;
+        button.classList.toggle('is-active', selected);
+        button.setAttribute('aria-pressed', String(selected));
+      });
+      if (activeRow && activeText) { activeRow.hidden = !tag; activeText.textContent = tag ? `#${tag}` : ''; }
+      if (empty) empty.hidden = posts.some(post => !post.hidden);
+      if (updateUrl) {
+        const url = new URL(window.location.href);
+        tag ? url.searchParams.set('tag', tag) : url.searchParams.delete('tag');
+        history.pushState({}, '', url);
+      }
+    };
+    buttons.forEach(button => button.addEventListener('click', () => apply(button.dataset.tag ?? '', true)));
+    window.addEventListener('popstate', () => apply(new URLSearchParams(location.search).get('tag')));
+    apply(new URLSearchParams(location.search).get('tag'));
+  });
+</script>

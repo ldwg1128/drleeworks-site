@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SidebarShell from '../../../components/SidebarShell.astro';
+import BoardPage from '../../../components/BoardPage.astro';
+import type { Lang } from '../../../i18n/ui';
+export function getStaticPaths(){return (['ko','en'] as Lang[]).map(lang=>({params:{lang},props:{lang}}));}
+const {lang}=Astro.props as {lang:Lang};
+const copy={ko:{title:'컴퓨팅',intro:'컴퓨터, 소프트웨어 개발 및 오픈소스 관련 기록입니다.',heading:'컴퓨팅 게시물'},en:{title:'Computing',intro:'Notes on computers, software development, and open source.',heading:'Computing Posts'}} as const;
+const page=copy[lang];
+const categories=lang==='ko'?['컴퓨팅']:['Computing'];
+const posts=(await getCollection('posts',({data})=>!data.draft&&data.lang===lang&&categories.includes(data.category))).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
+---
+<BaseLayout {lang} title={`${page.title} | DrLeeWorks`} description={page.intro}>
+  <header class="page-head"><div class="container"><h1>{page.title}</h1><p class="lead">{page.intro}</p></div></header>
+  <section class="section section-with-sidebar"><SidebarShell {lang}><BoardPage {lang} {posts} heading={page.heading}/></SidebarShell></section>
+</BaseLayout>

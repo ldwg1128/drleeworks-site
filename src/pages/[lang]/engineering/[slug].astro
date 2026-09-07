@@ -1,0 +1,5 @@
+---
+import {getCollection,render} from 'astro:content';import ContentLayout from '../../../layouts/ContentLayout.astro';
+export async function getStaticPaths(){const notes=await getCollection('engineering');return notes.map(note=>({params:{lang:note.data.lang,slug:note.data.slug},props:{note}}));}const {note}=Astro.props;const {Content}=await render(note);
+---
+<ContentLayout lang={note.data.lang} title={note.data.title} description={note.data.summary}><Content/></ContentLayout>

@@ -1,0 +1,14 @@
+---
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import { localizedPath } from '../utils/routes';
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+---
+<footer class="site-footer"><div class="container footer-grid">
+  <div><strong>DrLeeWorks</strong><br />© {new Date().getFullYear()} DrLeeWorks</div>
+  <div class="footer-links">
+    <a href={localizedPath(lang,'/software')}>{t.software}</a><a href={localizedPath(lang,'/blog')}>{t.blog}</a><a href={localizedPath(lang,'/engineering')}>{t.engineering}</a>
+    <a href="https://github.com/your-username">GitHub</a><span>{t.contact}</span><span>{t.privacy}</span><span>{t.support}</span>
+  </div>
+</div></footer>

@@ -1,0 +1,39 @@
+---
+import type { Lang } from '../i18n/ui';
+import { ui } from '../i18n/ui';
+import { getSidebarNavigation } from '../config/navigation';
+import { localizedPath } from '../utils/routes';
+const { lang } = Astro.props as { lang: Lang };
+const groups = getSidebarNavigation(lang);
+const pathname = Astro.url.pathname;
+const t = ui[lang];
+const active = (path: string) => pathname === localizedPath(lang, path) || pathname.startsWith(`${localizedPath(lang, path)}/`);
+---
+<div class="mobile-menu">
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="section-navigation">☰ <span>{t.menu}</span></button>
+</div>
+<aside class="site-sidebar" id="section-navigation" aria-label={t.menu}>
+  <button class="drawer-close" type="button" aria-label={t.closeMenu}>×</button>
+  <nav>
+    {groups.map((group, index) => <div class:list={['sidebar-group', {'has-separator': index > 0}]}>
+      {group.items.map(item => <a href={localizedPath(lang, item.path)} aria-current={active(item.path) ? 'page' : undefined}>{item.label}</a>)}
+    </div>)}
+  </nav>
+</aside>
+<div class="drawer-backdrop" aria-hidden="true"></div>
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const sidebar = document.querySelector<HTMLElement>('.site-sidebar');
+  const close = document.querySelector<HTMLButtonElement>('.drawer-close');
+  const backdrop = document.querySelector<HTMLElement>('.drawer-backdrop');
+  const setOpen = (open: boolean) => {
+    sidebar?.classList.toggle('is-open', open);
+    backdrop?.classList.toggle('is-open', open);
+    toggle?.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('drawer-open', open);
+  };
+  toggle?.addEventListener('click', () => setOpen(true));
+  close?.addEventListener('click', () => setOpen(false));
+  backdrop?.addEventListener('click', () => setOpen(false));
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') setOpen(false); });
+</script>

@@ -1,0 +1,10 @@
+---
+import { getCollection, render } from 'astro:content'; import BaseLayout from '../../../layouts/BaseLayout.astro'; import {ui,type Lang} from '../../../i18n/ui'; import {formatDate} from '../../../utils/routes';
+export async function getStaticPaths(){const entries=await getCollection('software');return (['ko','en'] as Lang[]).flatMap(lang=>entries.map(entry=>({params:{lang,slug:entry.data.slug},props:{lang,entry}})));}
+const {lang,entry}=Astro.props; const locale=lang as Lang; const t=ui[locale]; const d=entry.data; const {Content}=await render(entry);
+---
+<BaseLayout lang={locale} title={`${d.name} | DrLeeWorks`} description={d.description[locale]}>
+  <header class="page-head"><div class="container"><div class="eyebrow">{t.software}</div><h1>{d.name}</h1><p class="lead">{d.description[lang]}</p><a class="button" href={d.downloadUrl}>{t.download} {d.version}</a></div></header>
+  <div class="container software-layout"><article class="prose"><h2>{t.features}</h2><ul>{d.features[locale].map((x:string)=><li>{x}</li>)}</ul><h2>{t.requirements}</h2><p>{d.requirements[locale]}</p><h2>{t.installation}</h2><p>{d.installation[locale]}</p><h2>{t.changelog}</h2><p>{d.changelog[locale]}</p><h2>{t.knownIssues}</h2><p>{d.knownIssues[locale]}</p><Content /></article>
+  <aside class="sidebar"><dl class="data-list"><dt>{t.version}</dt><dd>{d.version}</dd><dt>{t.released}</dt><dd>{formatDate(d.releaseDate,locale)}</dd><dt>{t.supportedOs}</dt><dd>{d.operatingSystems.join(', ')}</dd><dt>{t.verification} (SHA-256)</dt><dd><code>{d.sha256}</code></dd><dt>{t.signature}</dt><dd>{d.publisher}<br/>{d.signature[locale]}</dd><dt>{t.license}</dt><dd>{d.license}</dd></dl><h3>{t.links}</h3><p><a href={d.repositoryUrl}>{t.repository}</a><br/><a href={d.releasesUrl}>{t.releases}</a><br/><a href={d.bugReportUrl}>{t.bugReport}</a></p></aside></div>
+</BaseLayout>

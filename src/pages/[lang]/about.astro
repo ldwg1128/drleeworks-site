@@ -1,0 +1,8 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro'; import { ui, type Lang } from '../../i18n/ui';
+export function getStaticPaths(){return (['ko','en'] as Lang[]).map(lang=>({params:{lang},props:{lang}}));} const {lang}=Astro.props as {lang:Lang}; const t=ui[lang];
+---
+<ContentLayout {lang} title={t.about} description={t.aboutText}>
+  <h2>{t.tagline}</h2><p>{t.intro}</p>
+  <p>{lang==='ko'?'현재 공개된 정보는 예시이며, 실제 프로젝트와 연락처 정보는 운영 전 교체됩니다.':'Published information is currently illustrative and will be replaced with real project and contact details before launch.'}</p>
+</ContentLayout>

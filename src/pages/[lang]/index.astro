@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import SidebarShell from '../../components/SidebarShell.astro';
+import { ui, type Lang } from '../../i18n/ui';
+import { localizedPath } from '../../utils/routes';
+export function getStaticPaths() { return (['ko','en'] as Lang[]).map(lang => ({ params:{lang}, props:{lang} })); }
+const { lang } = Astro.props as { lang: Lang };
+const t = ui[lang];
+const software = (await getCollection('software'))[0];
+const posts = (await getCollection('posts', ({data}) => !data.draft && data.lang === lang)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
+const recommended = posts.slice(0, 2);
+const recent = posts.slice(0, 3);
+const engineering = (await getCollection('engineering', ({data}) => data.lang === lang)).sort((a,b)=>a.data.order-b.data.order).slice(0, 2);
+---
+<BaseLayout {lang} title="DrLeeWorks" description={t.intro}>
+  <section class="hero hero-compact"><div class="container"><div class="eyebrow">DrLeeWorks</div><h1>{t.tagline}</h1><p class="lead">{t.intro}</p></div></section>
+
+  <section class="home-highlights section"><div class="container highlight-grid">
+    <div class="highlight-column">
+      <div class="section-head"><h2>{t.featuredSoftware}</h2></div>
+      <article class="card"><div class="meta">{t.version} {software.data.version}</div><h3><a href={localizedPath(lang, `/software/${software.data.slug}`)}>{software.data.name}</a></h3><p>{software.data.description[lang]}</p></article>
+    </div>
+    <div class="highlight-column">
+      <div class="section-head"><h2>{t.recommendedPosts}</h2></div>
+      {recommended.length ? recommended.map(post => <PostCard {post} {lang} />) : <p class="meta">—</p>}
+    </div>
+    <div class="highlight-column">
+      <div class="section-head"><h2>{t.recentPosts}</h2></div>
+      {recent.length ? recent.map(post => <PostCard {post} {lang} />) : <p class="meta">—</p>}
+    </div>
+  </div></section>
+
+  <section class="feed-region">
+    <SidebarShell {lang}>
+      <div class="feed-head"><div class="eyebrow">DrLeeWorks Feed</div><h2>{t.contentFeed}</h2></div>
+      <div class="content-feed">
+        {recent.map(post => <PostCard {post} {lang} />)}
+        <article class="feed-item card"><div class="meta">{t.software}</div><h3><a href={localizedPath(lang, `/software/${software.data.slug}`)}>{software.data.name}</a></h3><p>{software.data.description[lang]}</p></article>
+        {engineering.map(note => <article class="feed-item card"><div class="meta">{t.engineering}</div><h3><a href={localizedPath(lang, `/engineering/${note.data.slug}`)}>{note.data.title}</a></h3><p>{note.data.summary}</p></article>)}
+      </div>
+    </SidebarShell>
+  </section>
+</BaseLayout>

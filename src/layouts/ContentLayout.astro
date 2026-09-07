@@ -1,0 +1,9 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { Lang } from '../i18n/ui';
+const { lang, title, description } = Astro.props as { lang: Lang; title: string; description: string };
+---
+<BaseLayout {lang} title={`${title} | DrLeeWorks`} {description}>
+  <header class="page-head"><div class="container"><h1>{title}</h1><p class="lead">{description}</p></div></header>
+  <div class="container prose"><slot /></div>
+</BaseLayout>

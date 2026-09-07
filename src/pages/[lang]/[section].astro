@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SidebarShell from '../../components/SidebarShell.astro';
+import PostCard from '../../components/PostCard.astro';
+import type { Lang } from '../../i18n/ui';
+
+type Section = 'opensource' | 'bug-reports' | 'tech' | 'daily' | 'support';
+const copy = {
+  ko: {
+    opensource: { title: '오픈소스 SW', intro: '직접 개발해 공개한 소프트웨어와 GitHub 저장소를 소개합니다.', body: '프로젝트 설명, 사용 기술, 라이선스와 저장소 링크가 이곳에 추가됩니다.' },
+    'bug-reports': { title: '버그 리포트', intro: 'DrLeeWorks 소프트웨어의 문제를 확인하고 제보하는 공간입니다.', body: '현재는 안내 페이지입니다. 향후 소프트웨어별 제보 양식 또는 GitHub Issues 연동을 추가할 수 있도록 독립된 섹션으로 준비했습니다.' },
+    tech: { title: '테크', intro: '프로그래밍, 소프트웨어 개발과 기술 도구에 관한 글을 모읍니다.', body: '관련 기술 글과 프로젝트 기록이 순차적으로 추가됩니다.' },
+    daily: { title: '기록', intro: '개발과 연구 과정의 짧은 메모와 작업 기록을 남깁니다.', body: '정식 기술 문서보다 가벼운 노트와 진행 기록을 위한 공간입니다.' },
+    support: { title: '후원', intro: 'DrLeeWorks의 지속적인 소프트웨어 개발과 기술 기록을 지원하는 공간입니다.', body: '현재는 준비 중입니다. 추후 계좌, Buy Me a Coffee, GitHub Sponsors 등의 방법을 선택적으로 안내할 수 있습니다.' }
+  },
+  en: {
+    opensource: { title: 'Open Source', intro: 'Public software projects and GitHub repositories developed by DrLeeWorks.', body: 'Project summaries, technologies, licenses, and repository links will be added here.' },
+    'bug-reports': { title: 'Bug Reports', intro: 'A starting point for reporting issues in DrLeeWorks software.', body: 'This is currently an information page. It is isolated so per-product forms or GitHub Issues integration can be added later.' },
+    tech: { title: 'Tech', intro: 'Writing about programming, software development, and technical tools.', body: 'Related technical articles and project notes will be collected here.' },
+    daily: { title: 'Note', intro: 'Short notes from ongoing software development and engineering work.', body: 'A place for lighter observations and progress notes outside formal technical articles.' },
+    support: { title: 'Support', intro: 'Support the continued development and technical publishing of DrLeeWorks.', body: 'This page is being prepared. Bank transfer, Buy Me a Coffee, or GitHub Sponsors options can be added later.' }
+  }
+} as const;
+export function getStaticPaths() {
+  const sections: Section[] = ['bug-reports','support'];
+  return (['ko','en'] as Lang[]).flatMap(lang => sections.map(section => ({ params:{lang,section}, props:{lang,section} })));
+}
+const { lang, section } = Astro.props as { lang: Lang; section: Section };
+const page = copy[lang][section];
+const categoryPosts = section === 'tech' ? (await getCollection('posts', ({data}) => !data.draft && data.lang === lang && (data.category === '테크' || data.category === 'Tech'))).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf()) : [];
+---
+<BaseLayout {lang} title={`${page.title} | DrLeeWorks`} description={page.intro}>
+  <header class="page-head"><div class="container"><h1>{page.title}</h1><p class="lead">{page.intro}</p></div></header>
+  <section class="section section-with-sidebar"><SidebarShell {lang}>
+    {categoryPosts.length > 0 ? <div class="content-list content-list-grid">{categoryPosts.map(post=><PostCard {post} {lang}/>)}</div> : <article class="placeholder-content"><div class="eyebrow">DrLeeWorks</div><h2>{page.title}</h2><p>{page.body}</p><div class="placeholder-panel" aria-hidden="true"></div></article>}
+  </SidebarShell></section>
+</BaseLayout>
