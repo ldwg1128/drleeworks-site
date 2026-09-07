@@ -7,7 +7,7 @@ import type { Lang } from '../../../i18n/ui';
 import { BOARD_CATEGORIES } from '../../../config/content';
 export function getStaticPaths(){return (['ko','en'] as Lang[]).map(lang=>({params:{lang},props:{lang}}));}
 const {lang}=Astro.props as {lang:Lang};
-const copy={ko:{title:'공학',intro:'공학 및 연구 관련 기술 기록입니다.',heading:'공학 게시물'},en:{title:'Engineering',intro:'Technical notes on engineering and research.',heading:'Engineering Posts'}} as const;
+const copy={ko:{title:'공학',intro:'공학 및 연구 관련 기록입니다.',heading:'공학 게시물'},en:{title:'Engineering',intro:'Technical notes on engineering and research.',heading:'Engineering Posts'}} as const;
 const page=copy[lang];
 const category=BOARD_CATEGORIES.engineering[lang];
 const posts=(await getCollection('posts',({data})=>!data.draft&&data.lang===lang&&data.category===category)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());

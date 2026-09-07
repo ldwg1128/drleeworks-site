@@ -2,20 +2,17 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { AUTHORS, POST_CATEGORIES } from './config/content';
 
-const localized = z.object({ ko: z.string(), en: z.string() });
-
 const software = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/software' }),
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/software', generateId: ({ entry }) => entry }),
   schema: z.object({
-    name: z.string(), slug: z.string(), description: localized,
+    name: z.string(), slug: z.string(), lang: z.enum(['ko', 'en']), translationKey: z.string(), description: z.string(),
     version: z.string(), releaseDate: z.coerce.date(), operatingSystems: z.array(z.string()),
     icon: z.string(), screenshots: z.array(z.string()).default([]),
-    features: z.object({ ko: z.array(z.string()), en: z.array(z.string()) }),
-    requirements: localized, installation: localized,
+    features: z.array(z.string()), requirements: z.string(), installation: z.string(),
     downloadUrl: z.string().url(), repositoryUrl: z.string().url(), releasesUrl: z.string().url(),
     assetFilename: z.string(), assetSize: z.number().optional(), distribution: z.string(),
-    sha256: z.string(), publisher: z.string(), certificateSubject: z.string(), certificateThumbprint: z.string(), signature: localized,
-    changelog: localized, knownIssues: localized.optional(), bugReportUrl: z.string().url(), license: z.string().optional()
+    sha256: z.string(), publisher: z.string(), certificateSubject: z.string(), certificateThumbprint: z.string(), signature: z.string(),
+    changelog: z.string(), knownIssues: z.string().optional(), bugReportUrl: z.string().url(), license: z.string().optional()
   })
 });
 
@@ -37,6 +34,5 @@ const posts = defineCollection({
     });
   })
 });
-
 
 export const collections = { software, posts };

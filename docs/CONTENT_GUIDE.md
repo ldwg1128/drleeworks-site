@@ -13,7 +13,7 @@ Posts can exist in only one language. If you translate one, create a separate fi
 
 ## New software page or release
 
-Copy `templates/software-page.md` to `src/content/software/<slug>.md`. Release binaries must stay in GitHub Releases. For every release, verify and update:
+Copy `templates/software-page.md` to `src/content/software/<lang>/<slug>.md` and keep one language per file. Give translated documents the same `translationKey`. Release binaries must stay in GitHub Releases. For every release, verify and update:
 
 - semantic version and release date
 - exact download asset URL

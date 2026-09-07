@@ -4,7 +4,7 @@ export type Lang = keyof typeof languages;
 export const ui = {
   ko: {
     home: '홈', software: '소프트웨어', engineering: '공학', about: '소개',
-    openSource: '오픈소스 SW', bugReports: '버그 리포트', computing: '컴퓨팅', tech: '테크', daily: '기록', notes: '기록', postsLabel: '게시물', tagsLabel: '태그', allPostsLabel: '전체 보기', activeTagLabel: '선택 태그', emptyPosts: '게시물이 아직 없습니다.', supportNav: '후원', menu: '메뉴', closeMenu: '메뉴 닫기',
+    openSource: '오픈소스 SW', bugReports: '버그 신고', computing: '컴퓨팅', tech: '테크', daily: '기록', notes: '기록', postsLabel: '게시물', tagsLabel: '태그', allPostsLabel: '전체 보기', activeTagLabel: '선택 태그', emptyPosts: '게시물이 아직 없습니다.', supportNav: '후원', menu: '메뉴', closeMenu: '메뉴 닫기',
     tagline: '독립 소프트웨어, 엔지니어링 도구와 기술 기록',
     intro: '직접 개발한 소프트웨어와 공학·연구 과정에서 얻은 지식을 정리하고 공유합니다.',
     featuredSoftware: '주요 소프트웨어', recommendedPosts: '추천 글', updated: '수정일', recentPosts: '최근 글', latestPosts: '최근 글', contentFeed: '새로운 콘텐츠', topics: '엔지니어링 / 연구 분야', aboutSite: 'DrLeeWorks 소개',
@@ -18,7 +18,7 @@ export const ui = {
   },
   en: {
     home: 'Home', software: 'Software', engineering: 'Engineering', about: 'About',
-    openSource: 'Open Source', bugReports: 'Bug Reports', computing: 'Computing', tech: 'Tech', daily: 'Note', notes: 'Notes', postsLabel: 'Posts', tagsLabel: 'Tags', allPostsLabel: 'View all', activeTagLabel: 'Selected tag', emptyPosts: 'No posts yet.', supportNav: 'Support', menu: 'Menu', closeMenu: 'Close menu',
+    openSource: 'Open Source', bugReports: 'Report a Bug', computing: 'Computing', tech: 'Tech', daily: 'Note', notes: 'Notes', postsLabel: 'Posts', tagsLabel: 'Tags', allPostsLabel: 'View all', activeTagLabel: 'Selected tag', emptyPosts: 'No posts yet.', supportNav: 'Support', menu: 'Menu', closeMenu: 'Close menu',
     tagline: 'Independent software, engineering tools, and technical notes',
     intro: 'A home for independently developed software and practical knowledge from engineering and research.',
     featuredSoftware: 'Featured Software', recommendedPosts: 'Recommended Posts', updated: 'Updated', recentPosts: 'Recent Posts', latestPosts: 'Latest Posts', contentFeed: 'Latest from DrLeeWorks', topics: 'Engineering / Research Topics', aboutSite: 'About DrLeeWorks',

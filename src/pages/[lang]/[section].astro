@@ -6,11 +6,11 @@ import type { Lang } from '../../i18n/ui';
 type Section = 'bug-reports' | 'support';
 const copy = {
   ko: {
-    'bug-reports': { title: '버그 리포트', intro: 'DrLeeWorks 소프트웨어의 문제를 확인하고 제보하는 공간입니다.', body: '현재는 안내 페이지입니다. 향후 소프트웨어별 제보 양식 또는 GitHub Issues 연동을 추가할 수 있도록 독립된 섹션으로 준비했습니다.' },
+    'bug-reports': { title: '버그 신고', intro: 'DrLeeWorks 소프트웨어를 사용하면서 발견한 오류와 불편 사항을 제보하는 게시판입니다.', body: '사용자가 보내 주신 제보를 확인하고 문제를 재현한 뒤 소프트웨어를 수정하고 개선하는 데 활용합니다. 현재는 안내 페이지이며, 향후 소프트웨어별 신고 양식이나 GitHub Issues 연동을 추가할 예정입니다.' },
     support: { title: '후원', intro: 'DrLeeWorks의 지속적인 소프트웨어 개발과 기술 기록을 지원하는 공간입니다.', body: '현재는 준비 중입니다. 추후 계좌, Buy Me a Coffee, GitHub Sponsors 등의 방법을 선택적으로 안내할 수 있습니다.' }
   },
   en: {
-    'bug-reports': { title: 'Bug Reports', intro: 'A starting point for reporting issues in DrLeeWorks software.', body: 'This is currently an information page. It is isolated so per-product forms or GitHub Issues integration can be added later.' },
+    'bug-reports': { title: 'Report a Bug', intro: 'A board for reporting errors and usability issues found while using DrLeeWorks software.', body: 'User reports will help us reproduce problems, fix defects, and improve the software. This is currently an information page, with per-product report forms or GitHub Issues integration planned for the future.' },
     support: { title: 'Support', intro: 'Support the continued development and technical publishing of DrLeeWorks.', body: 'This page is being prepared. Bank transfer, Buy Me a Coffee, or GitHub Sponsors options can be added later.' }
   }
 } as const;
