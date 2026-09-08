@@ -2,7 +2,6 @@
 import type { CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
 import { ui } from '../i18n/ui';
-import { SUPPORT_URL } from '../config/site';
 import PostCard from './PostCard.astro';
 const { lang, posts, heading } = Astro.props as { lang: Lang; posts: CollectionEntry<'posts'>[]; heading: string };
 const t = ui[lang];
@@ -24,10 +23,6 @@ const tags = [...new Set(posts.flatMap(post => post.data.tags))].sort((a,b) => a
       {tags.map(tag => <button class="tag-filter-button" type="button" data-tag={tag} aria-pressed="false">#{tag}</button>)}
     </div>
   </section>
-  <aside class="support-note">
-    <p>{t.supportMessage}</p>
-    <a class="button secondary" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">{t.supportButton}</a>
-  </aside>
 </section>
 <script>
   document.querySelectorAll<HTMLElement>('[data-board]').forEach(board => {

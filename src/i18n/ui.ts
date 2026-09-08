@@ -22,7 +22,9 @@ export const ui = {
       'AI와 새로운 도구를 활용해 필요한 프로그램을 직접 만들어 보기도 하고, 공학·연구 과정에서 얻은 전공 정보와 실무 경험도 함께 정리합니다.',
       '이곳에서 공개하는 프로그램은 개인적인 필요와 아이디어에서 시작해 AI 도구를 적극 활용하여 제작하고 있습니다. 가능한 범위에서 테스트하고 개선하고 있지만, 예상하지 못한 오류가 있을 수 있습니다.',
       '완성된 결과만 소개하기보다는 직접 사용하고, 만들고, 시행착오를 겪는 과정까지 기록하는 것을 목표로 합니다.'
-    ]
+    ],
+    youtubeText: '새로운 기술과 프로그램 제작, 공학·연구 관련 내용을 영상으로도 기록합니다.',
+    youtubeLink: 'YouTube 채널 보기'
   },
   en: {
     home: 'Home', software: 'Software', engineering: 'Engineering', about: 'About',
@@ -44,7 +46,9 @@ export const ui = {
       'I use AI and other tools to build programs for my own needs, while also sharing knowledge and practical experience from engineering and research.',
       'The software shared here often begins with a personal need or idea and is developed with extensive use of AI tools. I test and improve it as much as possible, but unexpected bugs or issues may still occur.',
       'Rather than sharing only finished results, DrLeeWorks aims to document the process of trying, building, learning, and improving along the way.'
-    ]
+    ],
+    youtubeText: 'I also share videos about new technologies, software projects, engineering, and research.',
+    youtubeLink: 'View YouTube Channel'
   }
 } as const;
 

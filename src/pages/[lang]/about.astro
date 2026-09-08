@@ -6,4 +6,7 @@ export function getStaticPaths(){return (['ko','en'] as Lang[]).map(lang=>({para
   <h2>{t.aboutHeading}</h2>
   <p>{t.aboutText}</p>
   {t.aboutParagraphs.map(paragraph => <p>{paragraph}</p>)}
+  <h3>YouTube</h3>
+  <p>{t.youtubeText}</p>
+  <p><a href="https://www.youtube.com/@DrLeeWorks" target="_blank" rel="noopener noreferrer">{t.youtubeLink} →</a></p>
 </ContentLayout>
