@@ -4,11 +4,11 @@ import path from 'node:path';
 const [lang, section, slug, ...titleParts] = process.argv.slice(2);
 const title = titleParts.join(' ');
 const categories = {
-  ko: { computing: '컴퓨팅', engineering: '공학', records: '기록' },
-  en: { computing: 'Computing', engineering: 'Engineering', records: 'Notes' }
+  ko: { computing: '컴퓨팅', engineering: '공학', records: '기록', recommendations: '추천' },
+  en: { computing: 'Computing', engineering: 'Engineering', records: 'Notes', recommendations: 'Recommendations' }
 };
 if (!categories[lang]?.[section] || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug ?? '') || !title) {
-  console.error('사용법: npm run post:new -- <ko|en> <computing|engineering|records> <slug> <제목>');
+  console.error('사용법: npm run post:new -- <ko|en> <computing|engineering|records|recommendations> <slug> <제목>');
   process.exit(1);
 }
 const parent = path.resolve('src/content/posts', lang, section);

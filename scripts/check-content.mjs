@@ -4,8 +4,8 @@ import path from 'node:path';
 const root = path.resolve('src/content/posts');
 const files = [];
 const expectedFolders = {
-  ko: { 컴퓨팅: 'computing', 공학: 'engineering', 기록: 'records' },
-  en: { Computing: 'computing', Engineering: 'engineering', Notes: 'records' }
+  ko: { 컴퓨팅: 'computing', 공학: 'engineering', 기록: 'records', 추천: 'recommendations' },
+  en: { Computing: 'computing', Engineering: 'engineering', Notes: 'records', Recommendations: 'recommendations' }
 };
 async function walk(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {

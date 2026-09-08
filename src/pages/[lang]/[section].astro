@@ -5,13 +5,15 @@ import { SUPPORT_URL } from '../../config/site';
 import type { Lang } from '../../i18n/ui';
 
 type Section = 'bug-reports' | 'support';
+const SHOW_GITHUB_BUG_REPORT = false;
+const GITHUB_BUG_REPORT_URL = 'https://github.com/ldwg1128/Shorts-Player/issues';
 const copy = {
   ko: {
-    'bug-reports': { title: '버그 신고', intro: 'DrLeeWorks 소프트웨어를 사용하면서 발견한 오류와 불편 사항을 제보하는 게시판입니다.', body: '사용자가 보내 주신 제보를 확인하고 문제를 재현한 뒤 소프트웨어를 수정하고 개선하는 데 활용합니다. 현재는 안내 페이지이며, 향후 소프트웨어별 신고 양식이나 GitHub Issues 연동을 추가할 예정입니다.' },
+    'bug-reports': { title: '버그 신고', intro: 'DrLeeWorks 소프트웨어를 사용하면서 발견한 오류와 불편 사항을 제보하는 게시판입니다.', body: '소프트웨어 사용 중 발견한 오류나 불편 사항을 제보하기 위한 공간입니다. 현재는 운영 초기 단계로 GitHub 저장소를 비공개로 운영하고 있으며, 안정화 이후 저장소 공개와 함께 GitHub Issues를 통한 버그 제보를 지원할 예정입니다. 향후에는 이 게시판에서도 직접 제보할 수 있도록 기능을 추가할 계획입니다.', action: 'GitHub에서 버그 제보' },
     support: { title: '후원', intro: 'DrLeeWorks를 찾아주셔서 감사합니다.', body: '사이트의 글이나 프로그램이 도움이 되었다면 커피 한 잔으로 응원해 주실 수 있습니다.' }
   },
   en: {
-    'bug-reports': { title: 'Report a Bug', intro: 'A board for reporting errors and usability issues found while using DrLeeWorks software.', body: 'User reports will help us reproduce problems, fix defects, and improve the software. This is currently an information page, with per-product report forms or GitHub Issues integration planned for the future.' },
+    'bug-reports': { title: 'Report a Bug', intro: 'A board for reporting errors and usability issues found while using DrLeeWorks software.', body: 'This space is intended for reporting errors or inconveniences found while using the software. As the site and software are still in the early stages of operation, the GitHub repository is currently private. Once the project has stabilized, the repository will be made public and bug reports will be accepted through GitHub Issues. We also plan to add a feature for submitting reports directly through this board in the future.', action: 'Report a Bug on GitHub' },
     support: { title: 'Support', intro: 'Thank you for visiting DrLeeWorks.', body: 'If you find the articles or software useful, you can support DrLeeWorks with a coffee.' }
   }
 } as const;
@@ -21,6 +23,7 @@ export function getStaticPaths() {
 }
 const { lang, section } = Astro.props as { lang: Lang; section: Section };
 const page = copy[lang][section];
+const bugReportAction = copy[lang]['bug-reports'].action;
 ---
 <BaseLayout {lang} title={`${page.title} | DrLeeWorks`} description={page.intro}>
   <header class="page-head"><div class="container"><h1>{page.title}</h1>{section !== 'support' && <p class="lead">{page.intro}</p>}</div></header>
@@ -32,7 +35,7 @@ const page = copy[lang][section];
         <a class="button secondary" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a>
       </article>
     ) : (
-      <article class="placeholder-content"><div class="eyebrow">DrLeeWorks</div><h2>{page.title}</h2><p>{page.body}</p><div class="placeholder-panel" aria-hidden="true"></div></article>
+      <article class="placeholder-content"><div class="eyebrow">DrLeeWorks</div><h2>{page.title}</h2><p>{page.body}</p>{SHOW_GITHUB_BUG_REPORT && <a class="button secondary" href={GITHUB_BUG_REPORT_URL} target="_blank" rel="noopener noreferrer">{bugReportAction}</a>}<div class="placeholder-panel" aria-hidden="true"></div></article>
     )}
   </SidebarShell></section>
 </BaseLayout>

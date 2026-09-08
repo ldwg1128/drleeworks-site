@@ -4,7 +4,7 @@ export type Lang = keyof typeof languages;
 export const ui = {
   ko: {
     home: '홈', software: '소프트웨어', engineering: '공학', about: '소개',
-    openSource: '오픈소스 SW', bugReports: '버그 신고', computing: '컴퓨팅', tech: '테크', daily: '기록', notes: '기록', postsLabel: '게시물', tagsLabel: '태그', allPostsLabel: '전체 보기', activeTagLabel: '선택 태그', emptyPosts: '게시물이 아직 없습니다.', supportNav: '후원', menu: '메뉴', closeMenu: '메뉴 닫기',
+    openSource: '오픈소스 SW', bugReports: '버그 신고', computing: '컴퓨팅', tech: '테크', daily: '기록', notes: '기록', recommendations: '추천', postsLabel: '게시물', tagsLabel: '태그', allPostsLabel: '전체 보기', activeTagLabel: '선택 태그', emptyPosts: '게시물이 아직 없습니다.', supportNav: '후원', menu: '메뉴', closeMenu: '메뉴 닫기',
     tagline: '새로운 기술을 직접 써보고, 만들고, 기록합니다',
     intro: 'AI와 새로운 기술을 직접 사용해 보고, 필요한 프로그램도 만들어 봅니다.\n공학·연구 과정에서 얻은 정보와 경험도 함께 기록합니다.',
     featuredSoftware: '주요 소프트웨어', recommendedPosts: '추천 글', updated: '수정일', recentPosts: '최근 글', latestPosts: '최근 글', contentFeed: '새로운 콘텐츠', topics: '엔지니어링 / 연구 분야', aboutSite: 'DrLeeWorks 소개',
@@ -28,7 +28,7 @@ export const ui = {
   },
   en: {
     home: 'Home', software: 'Software', engineering: 'Engineering', about: 'About',
-    openSource: 'Open Source', bugReports: 'Report a Bug', computing: 'Computing', tech: 'Tech', daily: 'Note', notes: 'Notes', postsLabel: 'Posts', tagsLabel: 'Tags', allPostsLabel: 'View all', activeTagLabel: 'Selected tag', emptyPosts: 'No posts yet.', supportNav: 'Support', menu: 'Menu', closeMenu: 'Close menu',
+    openSource: 'Open Source', bugReports: 'Report a Bug', computing: 'Computing', tech: 'Tech', daily: 'Note', notes: 'Notes', recommendations: 'Recommendations', postsLabel: 'Posts', tagsLabel: 'Tags', allPostsLabel: 'View all', activeTagLabel: 'Selected tag', emptyPosts: 'No posts yet.', supportNav: 'Support', menu: 'Menu', closeMenu: 'Close menu',
     tagline: 'Trying, building, and documenting new technology',
     intro: 'I explore AI and new technologies firsthand and build useful programs along the way.\nI also document insights and experience from engineering and research.',
     featuredSoftware: 'Featured Software', recommendedPosts: 'Recommended Posts', updated: 'Updated', recentPosts: 'Recent Posts', latestPosts: 'Latest Posts', contentFeed: 'Latest from DrLeeWorks', topics: 'Engineering / Research Topics', aboutSite: 'About DrLeeWorks',

@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SidebarShell from '../../../components/SidebarShell.astro';
+import BoardPage from '../../../components/BoardPage.astro';
+import type { Lang } from '../../../i18n/ui';
+import { BOARD_CATEGORIES } from '../../../config/content';
+export function getStaticPaths(){return (['ko','en'] as Lang[]).map(lang=>({params:{lang},props:{lang}}));}
+const {lang}=Astro.props as {lang:Lang};
+const copy={ko:{title:'추천',intro:'유용한 소프트웨어, 웹 서비스, 연구 및 개발 도구를 소개합니다.',heading:'추천 게시물'},en:{title:'Recommendations',intro:'Useful software, web services, and tools for research and development.',heading:'Recommendations'}} as const;
+const page=copy[lang];
+const category=BOARD_CATEGORIES.recommendations[lang];
+const posts=(await getCollection('posts',({data})=>!data.draft&&data.lang===lang&&data.category===category)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
+---
+<BaseLayout {lang} title={`${page.title} | DrLeeWorks`} description={page.intro}>
+  <header class="page-head"><div class="container"><h1>{page.title}</h1><p class="lead">{page.intro}</p></div></header>
+  <section class="section section-with-sidebar"><SidebarShell {lang}><BoardPage {lang} {posts} heading={page.heading}/></SidebarShell></section>
+</BaseLayout>
