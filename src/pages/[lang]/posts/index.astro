@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SidebarShell from '../../../components/SidebarShell.astro';
+import BoardPage from '../../../components/BoardPage.astro';
+import type { Lang } from '../../../i18n/ui';
+export function getStaticPaths(){return (['ko','en'] as Lang[]).map(lang=>({params:{lang},props:{lang}}));}
+const {lang}=Astro.props as {lang:Lang};
+const copy={
+  ko:{title:'최근 글',intro:'DrLeeWorks에 기록한 모든 글을 최신 발행일순으로 볼 수 있습니다.',heading:'전체 게시물'},
+  en:{title:'Recent Posts',intro:'Browse every post on DrLeeWorks, ordered by publication date.',heading:'All Posts'}
+} as const;
+const page=copy[lang];
+const posts=(await getCollection('posts',({data})=>!data.draft&&data.lang===lang)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
+---
+<BaseLayout {lang} title={`${page.title} | DrLeeWorks`} description={page.intro}>
+  <header class="page-head"><div class="container"><h1>{page.title}</h1><p class="lead">{page.intro}</p></div></header>
+  <section class="section section-with-sidebar"><SidebarShell {lang}><BoardPage {lang} {posts} heading={page.heading}/></SidebarShell></section>
+</BaseLayout>

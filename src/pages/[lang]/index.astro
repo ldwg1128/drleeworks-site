@@ -11,7 +11,9 @@ const t = ui[lang];
 const software = (await getCollection('software', ({data}) => data.lang === lang))[0];
 const posts = (await getCollection('posts', ({data}) => !data.draft && data.lang === lang)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
 const recommended = posts.filter(post => post.data.recommended).slice(0, 2);
-const recent = posts.slice(0, 3);
+const recent = posts.slice(0, 2);
+const recommendedPath = localizedPath(lang, '/recommended');
+const postsPath = localizedPath(lang, '/posts');
 ---
 <BaseLayout {lang} title="DrLeeWorks" description={t.intro}>
   <section class="hero hero-compact"><div class="container"><div class="eyebrow">DrLeeWorks</div><h1>{t.tagline}</h1><p class="lead">{t.intro}</p></div></section>
@@ -22,11 +24,11 @@ const recent = posts.slice(0, 3);
       {software ? <article class="card"><div class="meta">{t.version} {software.data.version}</div><h3><a href={localizedPath(lang, `/software/${software.data.slug}`)}>{software.data.name}</a></h3><p>{software.data.description}</p></article> : <p class="meta">—</p>}
     </div>
     <div class="highlight-column">
-      <div class="section-head"><h2>{t.recommendedPosts}</h2></div>
+      <div class="section-head"><h2><a class="section-title-link" href={recommendedPath}>{t.recommendedPosts}<span aria-hidden="true"> →</span></a></h2></div>
       {recommended.length ? recommended.map(post => <PostCard {post} {lang} />) : <p class="meta">—</p>}
     </div>
     <div class="highlight-column">
-      <div class="section-head"><h2>{t.recentPosts}</h2></div>
+      <div class="section-head"><h2><a class="section-title-link" href={postsPath}>{t.recentPosts}<span aria-hidden="true"> →</span></a></h2></div>
       {recent.length ? recent.map(post => <PostCard {post} {lang} />) : <p class="meta">—</p>}
     </div>
   </div></section>
