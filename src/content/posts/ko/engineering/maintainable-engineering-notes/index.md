@@ -5,9 +5,12 @@ translationKey: maintainable-engineering-notes
 lang: ko
 published: 2026-09-07
 category: 공학
-tags: [문서화, 연구, 재현성]
+tags:
+  - 문서화
+  - 연구
+  - 재현성
 author: DrLeeWorks
-summary: 계산, 실험 조건과 판단 근거를 나중에도 재현할 수 있도록 기록하는 기본 구조를 소개합니다.
+summary: 게시판 작동 확인을 위한 예시 글입니다.
 recommended: true
 draft: false
 ---
