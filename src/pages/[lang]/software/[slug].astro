@@ -39,7 +39,7 @@ const size = d.assetSize ? new Intl.NumberFormat(locale === 'ko' ? 'ko-KR' : 'en
       <div class="checksum-row"><dt>SHA-256</dt><dd><code data-checksum>{d.sha256}</code><button class="copy-button" type="button" data-copy-checksum data-copy-label={t.copy} data-copied-label={t.copied}>{t.copy}</button></dd></div>
     </dl>
     <div class="signature-info"><h3>{t.signature}</h3><p><strong>{d.publisher}</strong><br/><span>{d.signature}</span></p><details><summary>{locale==='ko'?'인증서 상세 정보':'Certificate details'}</summary><dl class="certificate-details"><dt>{t.certificateSubject}</dt><dd><code>{d.certificateSubject}</code></dd><dt>{t.certificateThumbprint}</dt><dd><code>{d.certificateThumbprint}</code></dd></dl></details></div>
-    <div class="download-links"><a class="button" href={d.downloadUrl}>{t.downloadWindows}</a><a href={d.releasesUrl}>{t.viewRelease}</a><a href={d.repositoryUrl}>{t.repository}</a><a href={d.bugReportUrl}>{t.bugReport}</a></div></section>
+    <div class="download-links"><a class="button" href={d.downloadUrl}>{t.downloadWindows}</a><a href={d.releasesUrl}>{t.viewRelease}</a>{d.showRepository && <a href={d.repositoryUrl}>{t.repository}</a>}{d.showBugReport && <a href={d.bugReportUrl}>{t.bugReport}</a>}</div></section>
   </article>
   <script>
     document.querySelectorAll<HTMLButtonElement>('[data-copy-checksum]').forEach(button => button.addEventListener('click', async () => {

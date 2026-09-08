@@ -10,6 +10,7 @@ const software = defineCollection({
     icon: z.string(), screenshots: z.array(z.string()).default([]),
     features: z.array(z.string()), requirements: z.string(), installation: z.string(),
     downloadUrl: z.string().url(), repositoryUrl: z.string().url(), releasesUrl: z.string().url(),
+    showRepository: z.boolean().default(true), showBugReport: z.boolean().default(true),
     assetFilename: z.string(), assetSize: z.number().optional(), distribution: z.string(),
     sha256: z.string(), publisher: z.string(), certificateSubject: z.string(), certificateThumbprint: z.string(), signature: z.string(),
     changelog: z.string(), knownIssues: z.string().optional(), bugReportUrl: z.string().url(), license: z.string().optional()
