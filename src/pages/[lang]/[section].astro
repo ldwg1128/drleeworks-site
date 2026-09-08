@@ -1,17 +1,18 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SidebarShell from '../../components/SidebarShell.astro';
+import { SUPPORT_URL } from '../../config/site';
 import type { Lang } from '../../i18n/ui';
 
 type Section = 'bug-reports' | 'support';
 const copy = {
   ko: {
     'bug-reports': { title: '버그 신고', intro: 'DrLeeWorks 소프트웨어를 사용하면서 발견한 오류와 불편 사항을 제보하는 게시판입니다.', body: '사용자가 보내 주신 제보를 확인하고 문제를 재현한 뒤 소프트웨어를 수정하고 개선하는 데 활용합니다. 현재는 안내 페이지이며, 향후 소프트웨어별 신고 양식이나 GitHub Issues 연동을 추가할 예정입니다.' },
-    support: { title: '후원', intro: 'DrLeeWorks의 지속적인 소프트웨어 개발과 기술 기록을 지원하는 공간입니다.', body: '현재는 준비 중입니다. 추후 계좌, Buy Me a Coffee, GitHub Sponsors 등의 방법을 선택적으로 안내할 수 있습니다.' }
+    support: { title: '후원', intro: 'DrLeeWorks를 찾아주셔서 감사합니다.', body: '사이트의 글이나 프로그램이 도움이 되었다면 커피 한 잔으로 응원해 주실 수 있습니다.' }
   },
   en: {
     'bug-reports': { title: 'Report a Bug', intro: 'A board for reporting errors and usability issues found while using DrLeeWorks software.', body: 'User reports will help us reproduce problems, fix defects, and improve the software. This is currently an information page, with per-product report forms or GitHub Issues integration planned for the future.' },
-    support: { title: 'Support', intro: 'Support the continued development and technical publishing of DrLeeWorks.', body: 'This page is being prepared. Bank transfer, Buy Me a Coffee, or GitHub Sponsors options can be added later.' }
+    support: { title: 'Support', intro: 'Thank you for visiting DrLeeWorks.', body: 'If you find the articles or software useful, you can support DrLeeWorks with a coffee.' }
   }
 } as const;
 export function getStaticPaths() {
@@ -22,8 +23,16 @@ const { lang, section } = Astro.props as { lang: Lang; section: Section };
 const page = copy[lang][section];
 ---
 <BaseLayout {lang} title={`${page.title} | DrLeeWorks`} description={page.intro}>
-  <header class="page-head"><div class="container"><h1>{page.title}</h1><p class="lead">{page.intro}</p></div></header>
+  <header class="page-head"><div class="container"><h1>{page.title}</h1>{section !== 'support' && <p class="lead">{page.intro}</p>}</div></header>
   <section class="section section-with-sidebar"><SidebarShell {lang}>
-    <article class="placeholder-content"><div class="eyebrow">DrLeeWorks</div><h2>{page.title}</h2><p>{page.body}</p><div class="placeholder-panel" aria-hidden="true"></div></article>
+    {section === 'support' ? (
+      <article class="placeholder-content">
+        <p>{page.intro}</p>
+        <p>{page.body}</p>
+        <a class="button secondary" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a>
+      </article>
+    ) : (
+      <article class="placeholder-content"><div class="eyebrow">DrLeeWorks</div><h2>{page.title}</h2><p>{page.body}</p><div class="placeholder-panel" aria-hidden="true"></div></article>
+    )}
   </SidebarShell></section>
 </BaseLayout>

@@ -30,3 +30,5 @@ license: REPLACE_WITH_LICENSE
 ---
 
 선택적인 제품 상세 설명입니다.
+
+Save as `src/content/software/<lang>/<slug>/index.md`. Put page-specific images beside this file and reference them with relative paths.

@@ -44,7 +44,7 @@ References: [Astro images](https://docs.astro.build/en/guides/images/#images-in-
 
 ## New software page or release
 
-Copy `templates/software-page.md` to `src/content/software/<lang>/<slug>.md` and keep one language per file. Give translated documents the same `translationKey`. Release binaries must stay in GitHub Releases. For every release, verify and update:
+Copy `templates/software-page.md` to `src/content/software/<lang>/<slug>/index.md` and keep one language per folder. Put any page-specific images beside `index.md` and use relative paths. Give translated documents the same `translationKey`. Release binaries must stay in GitHub Releases. For every release, verify and update:
 
 - semantic version and release date
 - exact download asset URL

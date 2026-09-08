@@ -1,14 +1,58 @@
 ---
 import type { Lang } from '../i18n/ui';
 import { useTranslations } from '../i18n/ui';
-import { localizedPath } from '../utils/routes';
+import { CONTACT_EMAIL, GITHUB_URL, SUPPORT_DISPLAY_URL, SUPPORT_URL } from '../config/site';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
 ---
 <footer class="site-footer"><div class="container footer-grid">
   <div><strong>DrLeeWorks</strong><br />© {new Date().getFullYear()} DrLeeWorks</div>
   <div class="footer-links">
-    <a href={localizedPath(lang,'/software')}>{t.software}</a><a href={localizedPath(lang,'/computing')}>{t.computing}</a><a href={localizedPath(lang,'/engineering')}>{t.engineering}</a><a href={localizedPath(lang,'/notes')}>{t.notes}</a>
-    <a href="https://github.com/ldwg1128">GitHub</a><span>{t.contact}</span><span>{t.privacy}</span><span>{t.support}</span>
+    <button type="button" class="footer-link-button" data-dialog-open="contact-dialog">{t.contact}</button>
+    <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
+    <button type="button" class="footer-link-button" data-dialog-open="support-dialog">{t.support}</button>
   </div>
 </div></footer>
+
+<dialog class="info-dialog" id="contact-dialog" aria-labelledby="contact-dialog-title">
+  <div class="info-dialog-inner">
+    <button type="button" class="dialog-close" data-dialog-close aria-label={t.close}>×</button>
+    <h2 id="contact-dialog-title">{t.contactEmail}</h2>
+    <p class="dialog-value">{CONTACT_EMAIL}</p>
+    <div class="dialog-actions"><button type="button" class="button secondary copy-button" data-copy-value={CONTACT_EMAIL}>{t.copy}</button><span class="copy-feedback" aria-live="polite" hidden>{t.copied}</span></div>
+  </div>
+</dialog>
+
+<dialog class="info-dialog" id="support-dialog" aria-labelledby="support-dialog-title">
+  <div class="info-dialog-inner">
+    <button type="button" class="dialog-close" data-dialog-close aria-label={t.close}>×</button>
+    <h2 id="support-dialog-title">{t.support}</h2>
+    <p class="dialog-value">{SUPPORT_DISPLAY_URL}</p>
+    <div class="dialog-actions"><button type="button" class="button secondary copy-button" data-copy-value={SUPPORT_URL}>{t.copy}</button><span class="copy-feedback" aria-live="polite" hidden>{t.copied}</span></div>
+  </div>
+</dialog>
+
+<script>
+  const copyText = async (value: string) => {
+    if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(value);
+    const field = document.createElement('textarea');
+    field.value = value; field.style.position = 'fixed'; field.style.opacity = '0';
+    document.body.append(field); field.select(); document.execCommand('copy'); field.remove();
+  };
+  document.querySelectorAll<HTMLButtonElement>('[data-dialog-open]').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const dialog = document.getElementById(trigger.dataset.dialogOpen ?? '') as HTMLDialogElement | null;
+      dialog?.querySelector<HTMLElement>('.copy-feedback')?.setAttribute('hidden', '');
+      dialog?.showModal();
+    });
+  });
+  document.querySelectorAll<HTMLDialogElement>('.info-dialog').forEach(dialog => {
+    dialog.querySelector<HTMLButtonElement>('[data-dialog-close]')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+    dialog.querySelector<HTMLButtonElement>('[data-copy-value]')?.addEventListener('click', async event => {
+      const button = event.currentTarget as HTMLButtonElement;
+      await copyText(button.dataset.copyValue ?? '');
+      dialog.querySelector<HTMLElement>('.copy-feedback')?.removeAttribute('hidden');
+    });
+  });
+</script>
