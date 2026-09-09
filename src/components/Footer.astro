@@ -27,8 +27,11 @@ const t = useTranslations(lang);
   <div class="info-dialog-inner">
     <button type="button" class="dialog-close" data-dialog-close aria-label={t.close}>×</button>
     <h2 id="support-dialog-title">{t.support}</h2>
-    <p class="dialog-value">{SUPPORT_DISPLAY_URL}</p>
-    <div class="dialog-actions"><button type="button" class="button secondary copy-button" data-copy-value={SUPPORT_URL}>{t.copy}</button><span class="copy-feedback" aria-live="polite" hidden>{t.copied}</span></div>
+    <p class="dialog-value"><a href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">{SUPPORT_DISPLAY_URL}</a></p>
+    <div class="dialog-actions">
+      <button type="button" class="button secondary copy-button" data-copy-value={SUPPORT_URL}>{t.copy}</button>
+      <span class="copy-feedback" aria-live="polite" hidden>{t.copied}</span>
+    </div>
   </div>
 </dialog>
 

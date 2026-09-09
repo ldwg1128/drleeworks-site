@@ -11,7 +11,7 @@ tags:
   - 재현성
 author: DrLeeWorks
 summary: 게시판 작동 확인을 위한 예시 글입니다.
-recommended: true
+recommended: false
 draft: false
 ---
 
