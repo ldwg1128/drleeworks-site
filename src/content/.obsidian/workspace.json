@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "posts/ko/computing/astra-blender/index.md",
+                "file": "posts/ko/recommendations/ffmpeg/index.md",
                 "mode": "source",
                 "source": false
               },
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "posts/ko/computing/astra-blender/index.md",
+                "file": "posts/ko/computing/obsidian-figure-video/제임스웹 이미지.png",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "posts/ko/computing/astra-blender/index.md",
+                "file": "posts/ko/computing/obsidian-figure-video/제임스웹 이미지.png",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "posts/ko/computing/astra-blender/index.md",
+                "file": "posts/ko/computing/obsidian-figure-video/제임스웹 이미지.png",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -188,8 +188,10 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "6b0a3052dfc3ecf3",
+  "active": "bf875a664b126460",
   "lastOpenFiles": [
+    "posts/ko/recommendations/vlc-media-player-example/index.md",
+    "posts/ko/recommendations/ffmpeg/index.md",
     "posts/ko/computing/obsidian-figure-video/제임스웹 이미지.png",
     "posts/ko/computing/astra-blender/index.md",
     "posts/ko/computing/obsidian-figure-video/index.md",
@@ -203,7 +205,6 @@
     "posts/ko/computing/astra-blender/image03.png",
     "posts/ko/computing/astra-blender/image02.png",
     "2026-09-08.md",
-    "posts/ko/computing/astra-blender/제임스웹 이미지.png",
     "posts/ko/computing/astra-blender"
   ]
 }

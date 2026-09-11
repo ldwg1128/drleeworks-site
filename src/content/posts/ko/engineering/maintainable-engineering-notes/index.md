@@ -5,13 +5,10 @@ translationKey: maintainable-engineering-notes
 lang: ko
 published: 2026-09-07
 category: 공학
-tags:
-  - 문서화
-  - 연구
-  - 재현성
+tags: [문서화, 연구, 재현성]
 author: DrLeeWorks
-summary: 게시판 작동 확인을 위한 예시 글입니다.
-recommended: false
+summary: AI가 개별 게시판 작동 확인을 위하여 생성한 예제 파일입니다.
+recommended: true
 draft: false
 ---
 
