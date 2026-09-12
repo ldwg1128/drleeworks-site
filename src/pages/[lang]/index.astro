@@ -8,10 +8,11 @@ import { localizedPath } from '../../utils/routes';
 export function getStaticPaths() { return (['ko','en'] as Lang[]).map(lang => ({ params:{lang}, props:{lang} })); }
 const { lang } = Astro.props as { lang: Lang };
 const t = ui[lang];
-const software = (await getCollection('software', ({data}) => data.lang === lang))[0];
+const software = (await getCollection('software', ({data}) => data.lang === lang)).sort((a,b)=>b.data.releaseDate.valueOf()-a.data.releaseDate.valueOf())[0];
 const posts = (await getCollection('posts', ({data}) => !data.draft && data.lang === lang)).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
 const recommended = posts.filter(post => post.data.recommended).slice(0, 2);
 const recent = posts.slice(0, 2);
+const softwarePath = localizedPath(lang, '/software');
 const recommendedPath = localizedPath(lang, '/recommended');
 const postsPath = localizedPath(lang, '/posts');
 ---
@@ -20,7 +21,7 @@ const postsPath = localizedPath(lang, '/posts');
 
   <section class="home-highlights section"><div class="container highlight-grid">
     <div class="highlight-column">
-      <div class="section-head"><h2>{t.featuredSoftware}</h2></div>
+      <div class="section-head"><h2><a class="section-title-link" href={softwarePath}>{t.featuredSoftware}<span aria-hidden="true"> →</span></a></h2></div>
       {software ? <article class="card"><div class="meta">{t.version} {software.data.version}</div><h3><a href={localizedPath(lang, `/software/${software.data.slug}`)}>{software.data.name}</a></h3><p>{software.data.description}</p></article> : <p class="meta">—</p>}
     </div>
     <div class="highlight-column">
