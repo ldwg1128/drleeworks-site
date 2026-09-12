@@ -10,7 +10,7 @@ tags:
   - 유지보수
 author: DrLeeWorks
 summary: Markdown 문서 편집에 Obsidian을 사용하면서 그림과 유튜브 동영상을 첨부하는 방법 정리.
-recommended: true
+recommended: false
 draft: false
 ---
 
