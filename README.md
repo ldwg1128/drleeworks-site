@@ -57,7 +57,7 @@ To publish a release, change `version`, `releaseDate`, `downloadUrl`, `sha256`, 
 
 ## Adding a post
 
-Copy `templates/post.md` to `src/content/posts/<ko|en>/<computing|engineering|records>/<post-folder>/index.md`. Match `lang` and `category` to the folders and set `draft: false` when ready. Public URLs use the explicit frontmatter `slug`, not the filename or folder name. An article does not require a translation. For paired translations, give both files the same `translationKey`; the article page will link the pair.
+Copy `templates/post.md` to `src/content/posts/<ko|en>/<computing|engineering|notes>/<post-folder>/index.md`. Match `lang` and `category` to the folders and set `draft: false` when ready. Public URLs use the explicit frontmatter `slug`, not the filename or folder name. An article does not require a translation. For paired translations, give both files the same `translationKey`; the article page will link the pair.
 
 Markdown supports headings, tables, fenced code, links, and math using `$...$` or `$$...$$`. MDX files may use the `.mdx` extension.
 

@@ -7,7 +7,7 @@ published: 2026-09-11
 category: Notes
 tags:
   - Site Operation
-  - Records
+  - Notes
   - Philosophy
 author: DrLeeWorks
 summary: An introduction to the core principles and direction of DrLeeWorks, including continuous updates, hands-on experiential records, and AI agentic vibe coding.

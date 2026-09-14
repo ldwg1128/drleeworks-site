@@ -4,10 +4,10 @@ slug: site-operation
 translationKey: site-operation
 lang: ko
 published: 2026-09-11
-category: 기록
+category: 노트
 tags:
   - 사이트운영
-  - 기록
+  - 노트
   - 개발철학
 author: DrLeeWorks
 summary: 지속적인 업데이트, 직접 겪은 경험 중심의 기록, AI 에이전틱 바이브 코딩 기반 개발 등 DrLeeWorks 사이트 운영의 주요 특징과 방향성을 소개한다.

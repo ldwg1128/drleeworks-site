@@ -2,7 +2,7 @@
 
 ## New article
 
-1. Copy `templates/post.md` to `src/content/posts/<ko|en>/<computing|engineering|records>/<post-folder>/index.md`.
+1. Copy `templates/post.md` to `src/content/posts/<ko|en>/<computing|engineering|notes>/<post-folder>/index.md`.
 2. Use a short lowercase ASCII slug with hyphens. Keep `slug` and the public URL stable after publication.
 3. Fill the frontmatter, write the article, and keep `draft: true` while editing.
 4. Put inline images beside `index.md` and use `![Description](./figure-01.webp)`.
@@ -14,7 +14,7 @@ Posts can exist in only one language. If you translate one, create a separate fi
 Each post folder contains exactly one `index.md` (or `index.mdx`) plus its assets.
 The frontmatter `slug` determines the public URL, independently of the folder name.
 Never change a published `slug` just because you rename its folder. `index` is not added to URLs.
-The `records` folder continues to publish under `/ko/notes/` or `/en/notes/`.
+The `notes` folder publishes under `/ko/notes/` or `/en/notes/`.
 Empty category folders may keep `.gitkeep`. Images are not collection entries.
 
 ```text
@@ -84,7 +84,7 @@ Create a draft with:
 npm run post:new -- ko engineering my-post-slug "게시물 제목"
 ```
 
-Valid sections are `computing`, `engineering`, and `records`. The command creates
+Valid sections are `computing`, `engineering`, `notes`, and `recommendations`. The command creates
 `<lang>/<section>/<slug>/index.md` with `draft: true` and refuses an existing post folder.
 
 ## YouTube
