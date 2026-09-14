@@ -34,6 +34,6 @@ const translationHref = translation
   </div></header>
   <article class="container prose">
     {post.data.featuredImage && <figure class="featured-figure"><Image src={post.data.featuredImage} alt={post.data.title} /><figcaption>{post.data.title}</figcaption></figure>}
-    <Content />
+    <div class="markdown-body"><Content /></div>
   </article>
 </BaseLayout>
