@@ -188,10 +188,15 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "6b0a3052dfc3ecf3",
+  "active": "bf875a664b126460",
   "lastOpenFiles": [
+    "posts/ko/engineering/tensile-test-basics/Jaw.gif",
     "posts/ko/engineering/tensile-test-basics/testing-machine.png",
+    "posts/ko/engineering/tensile-test-basics/Extensometer.png",
     "posts/ko/engineering/tensile-test-basics/index.md",
+    "ko/interactive/stress-strain-demo.md",
+    "ko/interactive",
+    "ko",
     "posts/ko/engineering/tensile-test-basics/testing-machine0.png",
     "posts/ko/engineering/tensile-test-basics/ChatGPT Image 2026년 9월 15일 오후 12_49_54.png",
     "images/tensile-test/testing.md",
@@ -213,9 +218,7 @@
     "posts/en/records/site-operation/index.md",
     "posts/en/records/site-operation",
     "posts/ko/records/site-operation/index.md",
-    "posts/ko/records/site-operation",
     "posts/en/recommendations/vlc-media-player/index.md",
-    "posts/en/recommendations/vlc-media-player",
     "posts/ko/recommendations/vlc-media-player-example/index.md",
     "posts/ko/recommendations/vlc-media-player/index.md",
     "posts/ko/computing/obsidian-figure-video/제임스웹 이미지.png",
@@ -224,7 +227,6 @@
     "posts/ko/computing/astra-blender/image08.png",
     "posts/ko/computing/astra-blender/image07.png",
     "posts/ko/computing/astra-blender/image06.png",
-    "posts/ko/computing/astra-blender/image05.png",
     "2026-09-08.md"
   ]
 }
