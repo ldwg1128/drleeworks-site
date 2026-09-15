@@ -2,11 +2,15 @@
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import InteractivePostBlocks from '../../../components/InteractivePostBlocks.astro';
+import StressStrainDemo from '../../../components/StressStrainDemo.astro';
 import { type Lang, ui } from '../../../i18n/ui';
 import { categoryPath } from '../../../config/content';
-import { extractInteractiveMarkers } from '../../../utils/interactive-markers';
+import { hasInteractiveMarkers, splitByInteractiveMarkers, getSharedMarkdownProcessor } from '../../../utils/interactive-markers';
 import { formatDate, localizedPath } from '../../../utils/routes';
+
+// Maps a `<!-- interactive:ID --> `marker in a plain Markdown post to the shared Astro
+// component that should render at that spot. Add new demos here as they are built.
+const INTERACTIVE_COMPONENTS = { 'tensile-test': StressStrainDemo } as const;
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -18,8 +22,22 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const lang = post.data.lang as Lang;
 const t = ui[lang];
-const { Content } = await render(post);
-const interactiveMarkers = extractInteractiveMarkers(post.body);
+
+const usesInteractiveMarkers = hasInteractiveMarkers(post.body);
+type Block = { type: 'html'; html: string } | { type: 'component'; id: string };
+let Content: Awaited<ReturnType<typeof render>>['Content'] | undefined;
+let blocks: Block[] = [];
+if (usesInteractiveMarkers) {
+  const processor = await getSharedMarkdownProcessor();
+  blocks = await Promise.all(splitByInteractiveMarkers(post.body).map(async (segment): Promise<Block> => {
+    if (segment.type === 'marker') return { type: 'component', id: segment.id };
+    const rendered = await processor.render(segment.text);
+    return { type: 'html', html: rendered.code };
+  }));
+} else {
+  ({ Content } = await render(post));
+}
+
 const all = await getCollection('posts', ({ data }) => !data.draft);
 const translation = all.find(candidate => candidate.data.translationKey === post.data.translationKey && candidate.data.lang !== lang);
 const sectionPath = localizedPath(lang, categoryPath(lang, post.data.category));
@@ -37,7 +55,12 @@ const translationHref = translation
   </div></header>
   <article class="container prose">
     {post.data.featuredImage && <figure class="featured-figure"><Image src={post.data.featuredImage} alt={post.data.title} /><figcaption>{post.data.title}</figcaption></figure>}
-    <div class="markdown-body"><Content /></div>
-    {interactiveMarkers.length > 0 && <InteractivePostBlocks markers={interactiveMarkers} {lang} />}
+    <div class="markdown-body">
+      {usesInteractiveMarkers ? blocks.map(block => {
+        if (block.type === 'html') return <Fragment set:html={block.html} />;
+        const Component = INTERACTIVE_COMPONENTS[block.id as keyof typeof INTERACTIVE_COMPONENTS];
+        return Component ? <Component lang={lang} /> : null;
+      }) : Content && <Content />}
+    </div>
   </article>
 </BaseLayout>
