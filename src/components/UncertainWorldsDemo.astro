@@ -1,0 +1,160 @@
+---
+import type { Lang } from '../i18n/ui';
+
+const { lang } = Astro.props as { lang: Lang };
+const copy = {
+  ko: {
+    note: '몇 가지 단순한 규칙과 seed 기반 stochastic force만으로 시간이 흐르는 입자계를 관찰합니다. 특정한 모양이나 결과를 목표로 하지 않습니다.',
+    randomness: 'Randomness', attraction: 'Attraction', bondChance: 'Bond Chance', breakChance: 'Break Chance',
+    run: 'Run', pause: 'Pause', newWorld: 'New World', reset: 'Reset', seed: 'Seed', applySeed: 'Apply',
+    particles: 'Particles', bonds: 'Bonds', clusters: 'Clusters', largest: 'Largest Cluster',
+    rules: 'Attraction · Repulsion · Stochastic movement · Probabilistic bonds'
+  },
+  en: {
+    note: 'Observe a particle system over time using a few simple rules and seed-based stochastic force. No particular shape or outcome is being targeted.',
+    randomness: 'Randomness', attraction: 'Attraction', bondChance: 'Bond Chance', breakChance: 'Break Chance',
+    run: 'Run', pause: 'Pause', newWorld: 'New World', reset: 'Reset', seed: 'Seed', applySeed: 'Apply',
+    particles: 'Particles', bonds: 'Bonds', clusters: 'Clusters', largest: 'Largest Cluster',
+    rules: 'Attraction · Repulsion · Stochastic movement · Probabilistic bonds'
+  }
+} as const;
+const t = copy[lang];
+const defaults = { randomness: 0.16, attraction: 0.18, bondChance: 0.08, breakChance: 0.004 };
+const defaultSeed = 184291;
+---
+
+<div class="uw-demo" data-uw-demo data-lang={lang} data-default-seed={defaultSeed}
+  data-default-randomness={defaults.randomness} data-default-attraction={defaults.attraction}
+  data-default-bond-chance={defaults.bondChance} data-default-break-chance={defaults.breakChance}>
+  <p class="meta uw-note">{t.note}</p>
+  <div class="uw-world"><canvas data-uw-canvas></canvas></div>
+  <div class="uw-seed-row">
+    <label><span>{t.seed}</span><input type="number" data-uw-seed-input min="0" max="4294967295" step="1" value={defaultSeed} /></label>
+    <button type="button" class="button secondary" data-uw-apply-seed>{t.applySeed}</button>
+  </div>
+  <div class="uw-controls">
+    <label class="uw-field"><span>{t.randomness}<output data-uw-value="randomness"></output></span><input type="range" data-uw-range="randomness" min="0" max="1" step="0.01" value={defaults.randomness} /></label>
+    <label class="uw-field"><span>{t.attraction}<output data-uw-value="attraction"></output></span><input type="range" data-uw-range="attraction" min="0" max="1" step="0.01" value={defaults.attraction} /></label>
+    <label class="uw-field"><span>{t.bondChance}<output data-uw-value="bondChance"></output></span><input type="range" data-uw-range="bondChance" min="0" max="1" step="0.01" value={defaults.bondChance} /></label>
+    <label class="uw-field"><span>{t.breakChance}<output data-uw-value="breakChance"></output></span><input type="range" data-uw-range="breakChance" min="0" max="0.02" step="0.001" value={defaults.breakChance} /></label>
+  </div>
+  <div class="uw-actions">
+    <button type="button" class="button" data-uw-run>{t.run}</button>
+    <button type="button" class="button secondary" data-uw-new>{t.newWorld}</button>
+    <button type="button" class="button secondary" data-uw-reset>{t.reset}</button>
+  </div>
+  <div class="uw-stats" aria-live="polite">
+    <span><b>{t.particles}</b><strong data-uw-stat="particles">50</strong></span>
+    <span><b>{t.bonds}</b><strong data-uw-stat="bonds">0</strong></span>
+    <span><b>{t.clusters}</b><strong data-uw-stat="clusters">50</strong></span>
+    <span><b>{t.largest}</b><strong data-uw-stat="largest">1</strong></span>
+  </div>
+  <p class="uw-rules meta">{t.rules}</p>
+</div>
+
+<script>
+  type Params = { randomness: number; attraction: number; bondChance: number; breakChance: number };
+  type Particle = { x: number; y: number; vx: number; vy: number };
+  type Bond = [number, number];
+  const PARTICLE_COUNT = 50;
+  const PARTICLE_RADIUS = 3.2;
+  const BOND_DISTANCE = 46;
+  const ATTRACTION_DISTANCE = 145;
+  const REPULSION_DISTANCE = 20;
+  const FIXED_STEP = 1 / 60;
+
+  class SeededRandom {
+    private state: number;
+    constructor(seed: number) { this.state = seed >>> 0 || 1; }
+    next() { this.state = (1664525 * this.state + 1013904223) >>> 0; return this.state / 4294967296; }
+    signed() { return this.next() * 2 - 1; }
+  }
+
+  function formatPercent(value: number) { return `${(value * 100).toFixed(value < 0.01 ? 1 : 0)}%`; }
+
+  document.querySelectorAll<HTMLElement>('[data-uw-demo]').forEach(root => {
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-uw-canvas]');
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    const drawingCanvas = canvas;
+    const drawingContext = ctx;
+    const defaults: Params = {
+      randomness: Number(root.dataset.defaultRandomness), attraction: Number(root.dataset.defaultAttraction),
+      bondChance: Number(root.dataset.defaultBondChance), breakChance: Number(root.dataset.defaultBreakChance)
+    };
+    let params = { ...defaults };
+    let seed = Number(root.dataset.defaultSeed) >>> 0;
+    let rng = new SeededRandom(seed);
+    let particles: Particle[] = [];
+    let bonds: Bond[] = [];
+    let width = 0;
+    let height = 0;
+    let running = false;
+    let frame = 0;
+    let accumulator = 0;
+    let lastTime = performance.now();
+    const seedInput = root.querySelector<HTMLInputElement>('[data-uw-seed-input]')!;
+    const runButton = root.querySelector<HTMLButtonElement>('[data-uw-run]')!;
+    const ranges = [...root.querySelectorAll<HTMLInputElement>('[data-uw-range]')];
+    const valueOutputs = [...root.querySelectorAll<HTMLOutputElement>('[data-uw-value]')];
+    const stat = (name: string) => root.querySelector<HTMLElement>(`[data-uw-stat="${name}"]`)!;
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      width = drawingCanvas.clientWidth; height = drawingCanvas.clientHeight;
+      drawingCanvas.width = Math.max(1, Math.floor(width * dpr)); drawingCanvas.height = Math.max(1, Math.floor(height * dpr));
+      drawingContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function makeWorld() {
+      rng = new SeededRandom(seed);
+      particles = Array.from({ length: PARTICLE_COUNT }, () => ({ x: PARTICLE_RADIUS + rng.next() * Math.max(1, width - PARTICLE_RADIUS * 2), y: PARTICLE_RADIUS + rng.next() * Math.max(1, height - PARTICLE_RADIUS * 2), vx: 0, vy: 0 }));
+      bonds = []; accumulator = 0; updateStats(); draw();
+    }
+    function hasBond(first: number, second: number) { return bonds.some(([a, b]) => (a === first && b === second) || (a === second && b === first)); }
+    function step() {
+      const forceX = new Float32Array(PARTICLE_COUNT); const forceY = new Float32Array(PARTICLE_COUNT);
+      for (let first = 0; first < PARTICLE_COUNT; first++) for (let second = first + 1; second < PARTICLE_COUNT; second++) {
+        const a = particles[first]; const b = particles[second]; const dx = b.x - a.x; const dy = b.y - a.y; const distance = Math.max(Math.hypot(dx, dy), 0.001); const nx = dx / distance; const ny = dy / distance;
+        if (distance < REPULSION_DISTANCE) { const force = (REPULSION_DISTANCE - distance) * 0.62; forceX[first] -= nx * force; forceY[first] -= ny * force; forceX[second] += nx * force; forceY[second] += ny * force; }
+        else if (distance < ATTRACTION_DISTANCE) { const force = params.attraction * (distance - REPULSION_DISTANCE) / ATTRACTION_DISTANCE * 0.45; forceX[first] += nx * force; forceY[first] += ny * force; forceX[second] -= nx * force; forceY[second] -= ny * force; }
+        if (distance < BOND_DISTANCE && !hasBond(first, second) && rng.next() < params.bondChance * 0.06) bonds.push([first, second]);
+      }
+      bonds = bonds.filter(() => rng.next() >= params.breakChance * 0.06);
+      particles.forEach((particle, index) => {
+        particle.vx = (particle.vx + forceX[index] + rng.signed() * params.randomness * 0.42) * 0.992; particle.vy = (particle.vy + forceY[index] + rng.signed() * params.randomness * 0.42) * 0.992;
+        particle.x = Math.min(width - PARTICLE_RADIUS, Math.max(PARTICLE_RADIUS, particle.x + particle.vx)); particle.y = Math.min(height - PARTICLE_RADIUS, Math.max(PARTICLE_RADIUS, particle.y + particle.vy));
+        if (particle.x === PARTICLE_RADIUS || particle.x === width - PARTICLE_RADIUS) particle.vx *= -0.55; if (particle.y === PARTICLE_RADIUS || particle.y === height - PARTICLE_RADIUS) particle.vy *= -0.55;
+      });
+    }
+    function updateStats() {
+      const parent = particles.map((_, index) => index); const find = (index: number): number => parent[index] === index ? index : (parent[index] = find(parent[index]));
+      bonds.forEach(([first, second]) => { const a = find(first); const b = find(second); if (a !== b) parent[b] = a; });
+      const sizes = new Map<number, number>(); parent.forEach((_, index) => { const group = find(index); sizes.set(group, (sizes.get(group) || 0) + 1); });
+      stat('particles').textContent = String(particles.length); stat('bonds').textContent = String(bonds.length); stat('clusters').textContent = String(sizes.size); stat('largest').textContent = String(Math.max(...sizes.values(), 0));
+    }
+    function draw() {
+      const style = getComputedStyle(document.documentElement); const line = style.getPropertyValue('--line').trim() || '#dbe1e5'; const accent = style.getPropertyValue('--accent').trim() || '#176b70'; const muted = style.getPropertyValue('--muted').trim() || '#60707d';
+      drawingContext.clearRect(0, 0, width, height); drawingContext.strokeStyle = line; drawingContext.lineWidth = 1;
+      bonds.forEach(([first, second]) => { drawingContext.beginPath(); drawingContext.moveTo(particles[first].x, particles[first].y); drawingContext.lineTo(particles[second].x, particles[second].y); drawingContext.stroke(); });
+      drawingContext.fillStyle = accent; particles.forEach(particle => { drawingContext.beginPath(); drawingContext.arc(particle.x, particle.y, PARTICLE_RADIUS, 0, Math.PI * 2); drawingContext.fill(); }); drawingContext.fillStyle = muted; drawingContext.font = '11px sans-serif'; drawingContext.fillText(`seed ${seed}`, 10, 18);
+    }
+    function animate(time: number) {
+      const elapsed = Math.min((time - lastTime) / 1000, 0.1); lastTime = time;
+      if (running) { accumulator += elapsed; while (accumulator >= FIXED_STEP) { step(); accumulator -= FIXED_STEP; } if (frame++ % 6 === 0) updateStats(); draw(); }
+      requestAnimationFrame(animate);
+    }
+    function syncControls() { ranges.forEach(range => { range.value = String(params[range.dataset.uwRange as keyof Params]); }); valueOutputs.forEach(output => { output.textContent = formatPercent(params[output.dataset.uwValue as keyof Params]); }); }
+    ranges.forEach(range => range.addEventListener('input', () => { params[range.dataset.uwRange as keyof Params] = Number(range.value); syncControls(); }));
+    runButton.addEventListener('click', () => { running = !running; runButton.textContent = running ? 'Pause' : 'Run'; lastTime = performance.now(); });
+    root.querySelector('[data-uw-new]')?.addEventListener('click', () => { seed = (window.crypto?.getRandomValues(new Uint32Array(1))[0] || Date.now()) >>> 0; seedInput.value = String(seed); makeWorld(); });
+    root.querySelector('[data-uw-apply-seed]')?.addEventListener('click', () => { seed = Number(seedInput.value) >>> 0; seedInput.value = String(seed); makeWorld(); });
+    root.querySelector('[data-uw-reset]')?.addEventListener('click', () => { params = { ...defaults }; seed = Number(root.dataset.defaultSeed) >>> 0; seedInput.value = String(seed); syncControls(); makeWorld(); });
+    new ResizeObserver(() => { resize(); particles.forEach(particle => { particle.x = Math.min(width - PARTICLE_RADIUS, particle.x); particle.y = Math.min(height - PARTICLE_RADIUS, particle.y); }); draw(); }).observe(drawingCanvas);
+    resize(); syncControls(); makeWorld(); requestAnimationFrame(animate);
+  });
+</script>
+
+<style>
+  .uw-demo{border:1px solid var(--line);border-radius:4px;background:var(--paper);padding:1.25rem;margin:1.75rem 0}.uw-note{margin:0 0 1rem}.uw-world{border:1px solid var(--line);background:var(--wash);border-radius:3px;overflow:hidden}.uw-world canvas{display:block;width:100%;height:360px}.uw-seed-row{display:flex;align-items:end;gap:.6rem;margin-top:.85rem}.uw-seed-row label{display:flex;flex-direction:column;gap:.25rem;color:var(--muted);font-size:.82rem}.uw-seed-row input{width:10rem;border:1px solid var(--line);border-radius:3px;padding:.35rem .45rem;background:var(--paper);color:var(--ink);font:inherit}.uw-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem 1.5rem;margin-top:1.2rem}.uw-field{display:flex;flex-direction:column;gap:.3rem;color:var(--ink);font-size:.9rem}.uw-field span{display:flex;justify-content:space-between;gap:1rem;font-weight:600}.uw-field output{color:var(--muted);font-variant-numeric:tabular-nums;font-weight:400}.uw-field input{width:100%;accent-color:var(--accent)}.uw-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem}.uw-actions .button{font-size:.9rem}.uw-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;border-top:1px solid var(--line);margin-top:1.2rem;padding-top:1rem}.uw-stats span{display:flex;flex-direction:column;gap:.15rem}.uw-stats b{color:var(--muted);font-size:.78rem;font-weight:500}.uw-stats strong{font-size:1.1rem;font-variant-numeric:tabular-nums}.uw-rules{margin:.9rem 0 0}
+  @media(max-width:760px){.uw-demo{padding:1rem}.uw-world canvas{height:260px}.uw-controls{grid-template-columns:1fr}.uw-stats{grid-template-columns:repeat(2,1fr)}.uw-seed-row{align-items:stretch;flex-wrap:wrap}.uw-seed-row label{flex:1;min-width:9rem}}
+</style>

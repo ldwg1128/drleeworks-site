@@ -3,6 +3,8 @@ import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import StressStrainDemo from '../../../components/StressStrainDemo.astro';
+import UncertainWorldsDemo from '../../../components/UncertainWorldsDemo.astro';
+import PredatorPreyDemo from '../../../components/PredatorPreyDemo.astro';
 import { type Lang, ui } from '../../../i18n/ui';
 import { categoryPath } from '../../../config/content';
 import { hasInteractiveMarkers, splitByInteractiveMarkers, getSharedMarkdownProcessor, resolveLocalImagePaths } from '../../../utils/interactive-markers';
@@ -10,7 +12,7 @@ import { formatDate, localizedPath } from '../../../utils/routes';
 
 // Maps a `<!-- interactive:ID --> `marker in a plain Markdown post to the shared Astro
 // component that should render at that spot. Add new demos here as they are built.
-const INTERACTIVE_COMPONENTS = { 'tensile-test': StressStrainDemo } as const;
+const INTERACTIVE_COMPONENTS = { 'tensile-test': StressStrainDemo, 'uncertain-worlds': UncertainWorldsDemo, 'predator-prey': PredatorPreyDemo } as const;
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
