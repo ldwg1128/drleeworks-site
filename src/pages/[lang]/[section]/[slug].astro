@@ -5,7 +5,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import StressStrainDemo from '../../../components/StressStrainDemo.astro';
 import { type Lang, ui } from '../../../i18n/ui';
 import { categoryPath } from '../../../config/content';
-import { hasInteractiveMarkers, splitByInteractiveMarkers, getSharedMarkdownProcessor } from '../../../utils/interactive-markers';
+import { hasInteractiveMarkers, splitByInteractiveMarkers, getSharedMarkdownProcessor, resolveLocalImagePaths } from '../../../utils/interactive-markers';
 import { formatDate, localizedPath } from '../../../utils/routes';
 
 // Maps a `<!-- interactive:ID --> `marker in a plain Markdown post to the shared Astro
@@ -24,19 +24,7 @@ const lang = post.data.lang as Lang;
 const t = ui[lang];
 
 const usesInteractiveMarkers = hasInteractiveMarkers(post.body);
-const postAssetUrls = import.meta.glob('/src/content/posts/**/*.{png,jpg,jpeg,webp,avif,gif,svg}', {
-  eager: true,
-  query: '?url',
-  import: 'default'
-}) as Record<string, string>;
-
-function resolvePostAssetUrls(markdown: string) {
-  const postDirectory = post.id.replace(/\/index\.(md|mdx)$/, '');
-  return markdown.replace(/(\]\()(\.\/[^)\s]+)(\))/g, (match, prefix: string, relativePath: string, suffix: string) => {
-    const assetKey = `/src/content/posts/${postDirectory}/${relativePath.slice(2)}`;
-    return `${prefix}${postAssetUrls[assetKey] ?? match.slice(prefix.length, -suffix.length)}${suffix}`;
-  });
-}
+const postDirectory = post.id.replace(/\/index\.(md|mdx)$/, '');
 
 type Block = { type: 'html'; html: string } | { type: 'component'; id: string };
 let Content: Awaited<ReturnType<typeof render>>['Content'] | undefined;
@@ -45,7 +33,7 @@ if (usesInteractiveMarkers) {
   const processor = await getSharedMarkdownProcessor();
   blocks = await Promise.all(splitByInteractiveMarkers(post.body).map(async (segment): Promise<Block> => {
     if (segment.type === 'marker') return { type: 'component', id: segment.id };
-    const rendered = await processor.render(resolvePostAssetUrls(segment.text));
+    const rendered = await processor.render(resolveLocalImagePaths(segment.text, postDirectory));
     return { type: 'html', html: rendered.code };
   }));
 } else {

@@ -57,3 +57,27 @@ export function getSharedMarkdownProcessor(): Promise<MarkdownRenderer> {
   return sharedProcessor;
 }
 
+// `getSharedMarkdownProcessor` bypasses `astro:content`'s `render(entry)`, so Astro's
+// built-in handling of relative `![](./figure.ext)` paths never runs for these segments.
+// This resolves the same `./figure.ext` syntax by hand so post authors can use one
+// convention (image beside `index.md`) regardless of whether the post uses interactive
+// markers. Vite's glob is watched in dev, so newly added images are picked up automatically.
+const LOCAL_IMAGE_PATTERN = /(!\[[^\]]*\]\()(\.\/[^)\s]+)(\))/g;
+const postImageUrls = import.meta.glob('/src/content/posts/**/*.{png,jpg,jpeg,webp,avif,gif,svg}', {
+  eager: true,
+  query: '?url',
+  import: 'default'
+}) as Record<string, string>;
+
+export function resolveLocalImagePaths(markdown: string, postDirectory: string): string {
+  return markdown.replace(LOCAL_IMAGE_PATTERN, (match, prefix: string, relativePath: string, suffix: string) => {
+    const assetKey = `/src/content/posts/${postDirectory}/${relativePath.slice(2)}`;
+    const resolved = postImageUrls[assetKey];
+    if (!resolved) {
+      console.warn(`[interactive-markers] Local image not found beside "${postDirectory}/index.md": ${relativePath}`);
+      return match;
+    }
+    return `${prefix}${resolved}${suffix}`;
+  });
+}
+
