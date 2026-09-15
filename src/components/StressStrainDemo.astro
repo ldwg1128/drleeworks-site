@@ -2,7 +2,7 @@
 // Self-contained, locale-aware interactive demo. No JS framework or chart library is added;
 // rendering uses a plain <canvas> driven by a small vanilla-JS module loaded once per page.
 import type { Lang } from '../i18n/ui';
-const { lang } = Astro.props as { lang: Lang };
+const { lang, mode = 'full' } = Astro.props as { lang: Lang; mode?: 'full' | 'compact' };
 
 const copy = {
   ko: {
@@ -10,8 +10,7 @@ const copy = {
     stressAxis: 'Stress (MPa)', strainAxis: 'Strain (%)',
     unitE: 'GPa', unitStress: 'MPa', unitStrain: '%',
     elastic: '탄성 영역', plastic: '소성 영역', yieldPoint: '항복점', utsPoint: 'UTS', fracturePoint: '파단점',
-    materialPresets: '대표 재료', custom: '사용자 설정', selectedMaterial: '선택 재료',
-    compositeNote: '복합재료 값은 대표적인 섬유방향 인장 특성을 단순화하여 나타낸 값입니다.',
+    materialPresets: '대표 재료',
     demoNote: '대표 재료를 선택하면 일반적인 물성값을 이용한 응력–변형률 곡선을 확인할 수 있습니다. 표시되는 값은 교육용 대표값이며 실제 물성은 재료의 등급, 제조방법 및 시험조건에 따라 달라질 수 있습니다.'
   },
   en: {
@@ -19,8 +18,7 @@ const copy = {
     stressAxis: 'Stress (MPa)', strainAxis: 'Strain (%)',
     unitE: 'GPa', unitStress: 'MPa', unitStrain: '%',
     elastic: 'Elastic region', plastic: 'Plastic region', yieldPoint: 'Yield point', utsPoint: 'UTS', fracturePoint: 'Fracture point',
-    materialPresets: 'Material Presets', custom: 'Custom', selectedMaterial: 'Selected material',
-    compositeNote: 'Composite values are simplified representative tensile properties along the fiber direction.',
+    materialPresets: 'Material presets',
     demoNote: 'Selecting a representative material shows a stress\u2013strain curve built from typical property values. The values shown are educational representative values; actual properties vary with material grade, manufacturing process, and test conditions.'
   }
 } as const;
@@ -28,93 +26,40 @@ const t = copy[lang];
 
 const defaults = { e: 200, yieldStrength: 250, uts: 400, fractureStrain: 20 };
 
-// Representative, education-only property values (not tied to a specific product or grade).
-// Ceramics and composites set yieldStrength = uts and derive fractureStrain from E and uts,
-// so the shared curve model naturally collapses to a straight elastic line to fracture (brittle),
-// instead of forcing every material through an Elastic-Yield-Plastic-UTS-Fracture path.
-const materialGroups = [
-  {
-    id: 'metals', ko: '금속', en: 'Metals',
-    materials: [
-      { id: 'steel', label: 'Structural Steel', e: 200, yieldStrength: 250, uts: 400, fractureStrain: 20 },
-      { id: 'aluminum', label: 'Aluminum Alloy', e: 70, yieldStrength: 270, uts: 310, fractureStrain: 12 }
-    ]
-  },
-  {
-    id: 'polymers', ko: '고분자', en: 'Polymers',
-    materials: [
-      { id: 'pp', label: 'Polypropylene (PP)', e: 1.5, yieldStrength: 30, uts: 35, fractureStrain: 150 },
-      { id: 'pc', label: 'Polycarbonate (PC)', e: 2.3, yieldStrength: 60, uts: 65, fractureStrain: 100 }
-    ]
-  },
-  {
-    id: 'ceramics', ko: '세라믹', en: 'Ceramics',
-    materials: [
-      { id: 'alumina', label: 'Alumina', e: 370, yieldStrength: 300, uts: 300, fractureStrain: 0.081 },
-      { id: 'sic', label: 'Silicon Carbide', e: 410, yieldStrength: 300, uts: 300, fractureStrain: 0.073 }
-    ]
-  },
-  {
-    id: 'composites', ko: '복합재료', en: 'Composites',
-    materials: [
-      { id: 'gfrp', label: 'GFRP', e: 40, yieldStrength: 800, uts: 800, fractureStrain: 2.0 },
-      { id: 'cfrp', label: 'CFRP', e: 140, yieldStrength: 1500, uts: 1500, fractureStrain: 1.07 }
-    ]
-  }
+// Education-only representative values. Each preset also selects a characteristic
+// curve shape: yielding steel, ductile thermoplastic, or linear-brittle failure.
+const materials = [
+  { id: 'steel', label: 'Structural Steel', profile: 'steel', e: 200, yieldStrength: 250, uts: 400, fractureStrain: 25 },
+  { id: 'pp', label: 'Polypropylene', profile: 'polypropylene', e: 1.45, yieldStrength: 33, uts: 33, fractureStrain: 150 },
+  { id: 'alumina', label: 'Alumina', profile: 'brittle', e: 370, yieldStrength: 300, uts: 300, fractureStrain: 0.081 },
+  { id: 'cfrp', label: 'CFRP', profile: 'brittle', e: 135, yieldStrength: 2135, uts: 2135, fractureStrain: 1.58 }
 ] as const;
 ---
 
-<div class="ss-demo" data-ss-demo data-lang={lang}
+<div class:list={['ss-demo', { 'is-compact': mode === 'compact' }]} data-ss-demo data-lang={lang}
   data-default-e={defaults.e} data-default-yield={defaults.yieldStrength}
-  data-default-uts={defaults.uts} data-default-fracture={defaults.fractureStrain}
-  data-label-custom={t.custom} data-label-selected={t.selectedMaterial}>
-  <div class="ss-presets">
-    <div class="ss-presets-head">
-      <span class="ss-presets-title">{t.materialPresets}</span>
-      <span class="meta" data-ss-selected>{t.selectedMaterial}: {t.custom}</span>
-    </div>
-    <div class="ss-preset-groups">
-      {materialGroups.map((group, index) => (
-        <button type="button" class:list={['tag-filter-button', { 'is-active': index === 0 }]}
-          data-ss-group={group.id} aria-pressed={index === 0 ? 'true' : 'false'}>{group[lang]}</button>
-      ))}
-    </div>
-    <div class="ss-preset-materials">
-      {materialGroups.map((group, index) => (
-        <div class="ss-material-row" data-ss-material-row={group.id} hidden={index !== 0}>
-          {group.materials.map(material => (
-            <button type="button" class="tag-filter-button" data-ss-preset
-              data-preset-id={material.id} data-preset-label={material.label}
-              data-preset-e={material.e} data-preset-yield={material.yieldStrength}
-              data-preset-uts={material.uts} data-preset-fracture={material.fractureStrain}
-              aria-pressed="false">{material.label}</button>
-          ))}
-        </div>
-      ))}
-    </div>
-    <p class="meta" data-ss-composite-note hidden>{t.compositeNote}</p>
-  </div>
-  <p class="meta ss-demo-note">{t.demoNote}</p>
+  data-default-uts={defaults.uts} data-default-fracture={defaults.fractureStrain}>
+  {mode === 'full' && <p class="meta ss-demo-note">{t.demoNote}</p>}
   <div class="ss-controls">
     <label class="ss-field">
       <span class="ss-field-label">{t.young} <em>({t.unitE})</em></span>
       <span class="ss-field-inputs">
-        <input type="range" data-ss-range="e" min="1" max="450" step="0.5" value={defaults.e} />
-        <input type="number" data-ss-number="e" min="1" max="450" step="0.5" value={defaults.e} />
+        <input type="range" data-ss-range="e" min="1" max="450" step="0.05" value={defaults.e} />
+        <input type="number" data-ss-number="e" min="1" max="450" step="0.05" value={defaults.e} />
       </span>
     </label>
     <label class="ss-field">
       <span class="ss-field-label">{t.yield} <em>({t.unitStress})</em></span>
       <span class="ss-field-inputs">
-        <input type="range" data-ss-range="yield" min="10" max="1600" step="5" value={defaults.yieldStrength} />
-        <input type="number" data-ss-number="yield" min="10" max="1600" step="5" value={defaults.yieldStrength} />
+        <input type="range" data-ss-range="yield" min="10" max="3500" step="5" value={defaults.yieldStrength} />
+        <input type="number" data-ss-number="yield" min="10" max="3500" step="5" value={defaults.yieldStrength} />
       </span>
     </label>
     <label class="ss-field">
       <span class="ss-field-label">{t.uts} <em>({t.unitStress})</em></span>
       <span class="ss-field-inputs">
-        <input type="range" data-ss-range="uts" min="10" max="2000" step="5" value={defaults.uts} />
-        <input type="number" data-ss-number="uts" min="10" max="2000" step="5" value={defaults.uts} />
+        <input type="range" data-ss-range="uts" min="10" max="3500" step="5" value={defaults.uts} />
+        <input type="number" data-ss-number="uts" min="10" max="3500" step="5" value={defaults.uts} />
       </span>
     </label>
     <label class="ss-field">
@@ -133,20 +78,107 @@ const materialGroups = [
     <span><i class="ss-dot ss-dot-uts"></i>{t.utsPoint}</span>
     <span><i class="ss-dot ss-dot-fracture"></i>{t.fracturePoint}</span>
   </div>
-  <button type="button" class="button secondary" data-ss-reset>{t.reset}</button>
+  <div class="ss-actions" aria-label={t.materialPresets}>
+    <button type="button" class="button secondary" data-ss-reset>{t.reset}</button>
+    {materials.map(material => (
+      <button type="button" class="tag-filter-button" data-ss-preset
+        data-preset-id={material.id} data-preset-profile={material.profile}
+        data-preset-e={material.e} data-preset-yield={material.yieldStrength}
+        data-preset-uts={material.uts} data-preset-fracture={material.fractureStrain}
+        aria-pressed="false">{material.label}</button>
+    ))}
+  </div>
 </div>
 
 <script>
   type Params = { e: number; yieldStrength: number; uts: number; fractureStrain: number };
+  type CurveProfile = 'generic' | 'steel' | 'polypropylene' | 'brittle';
 
   // Points closer together than this (in % strain) are treated as the same physical point,
   // so a material whose yield strength equals its UTS renders as a single elastic-to-fracture
   // line (brittle) instead of a forced Elastic-Yield-Plastic-UTS path.
   const COINCIDENT_STRAIN_EPS = 0.05;
 
-  function computeCurve(p: Params) {
+  function computeCurve(p: Params, profile: CurveProfile) {
     const eMpa = p.e * 1000;
     const yieldStrainPct = (p.yieldStrength / eMpa) * 100;
+
+    if (profile === 'brittle') {
+      const points = Array.from({ length: 41 }, (_, i) => {
+        const strain = p.fractureStrain * i / 40;
+        return { strain, stress: p.uts * i / 40 };
+      });
+      return { points, yieldStrainPct: p.fractureStrain, utsStrainPct: p.fractureStrain, fractureStress: p.uts };
+    }
+
+    if (profile === 'steel') {
+      const plateauEnd = Math.min(Math.max(1.5, yieldStrainPct * 3), p.fractureStrain * 0.2);
+      const utsStrainPct = Math.max(plateauEnd, p.fractureStrain * 0.62);
+      const fractureStress = p.uts * 0.72;
+      const points: { strain: number; stress: number }[] = [];
+      for (let i = 0; i <= 20; i++) {
+        const strain = yieldStrainPct * i / 20;
+        points.push({ strain, stress: eMpa * strain / 100 });
+      }
+      for (let i = 1; i <= 12; i++) {
+        const ratio = i / 12;
+        points.push({ strain: yieldStrainPct + ratio * (plateauEnd - yieldStrainPct), stress: p.yieldStrength });
+      }
+      for (let i = 1; i <= 36; i++) {
+        const ratio = i / 36;
+        points.push({
+          strain: plateauEnd + ratio * (utsStrainPct - plateauEnd),
+          stress: p.yieldStrength + (p.uts - p.yieldStrength) * (1 - Math.pow(1 - ratio, 2.2))
+        });
+      }
+      for (let i = 1; i <= 20; i++) {
+        const ratio = i / 20;
+        points.push({ strain: utsStrainPct + ratio * (p.fractureStrain - utsStrainPct), stress: p.uts + (fractureStress - p.uts) * Math.pow(ratio, 1.25) });
+      }
+      return { points, yieldStrainPct, utsStrainPct, fractureStress };
+    }
+
+    if (profile === 'polypropylene') {
+      // Typical unfilled PP: rounded approach to yield, post-yield softening/cold
+      // drawing, then molecular-orientation hardening before fracture.
+      const presetYieldStrain = Math.min(9, p.fractureStrain * 0.18);
+      const ppYieldStrain = Math.max(yieldStrainPct, presetYieldStrain);
+      const valleyStrain = Math.min(p.fractureStrain * 0.22, ppYieldStrain * 3);
+      const hardeningStart = Math.max(valleyStrain, p.fractureStrain * 0.58);
+      const utsStrainPct = ppYieldStrain;
+      const orientationPeakStrain = p.fractureStrain * 0.88;
+      const fractureStress = p.uts * 0.7;
+      const points: { strain: number; stress: number }[] = [];
+      for (let i = 0; i <= 28; i++) {
+        const ratio = i / 28;
+        const normalized = (1 - Math.exp(-4 * ratio)) / (1 - Math.exp(-4));
+        points.push({ strain: ppYieldStrain * ratio, stress: p.yieldStrength * normalized });
+      }
+      for (let i = 1; i <= 14; i++) {
+        const ratio = i / 14;
+        points.push({ strain: ppYieldStrain + ratio * (valleyStrain - ppYieldStrain), stress: p.yieldStrength * (1 - 0.26 * Math.sin(ratio * Math.PI / 2)) });
+      }
+      for (let i = 1; i <= 28; i++) {
+        const ratio = i / 28;
+        points.push({ strain: valleyStrain + ratio * (hardeningStart - valleyStrain), stress: p.yieldStrength * (0.74 + 0.04 * ratio) });
+      }
+      for (let i = 1; i <= 28; i++) {
+        const ratio = i / 28;
+        points.push({
+          strain: hardeningStart + ratio * (orientationPeakStrain - hardeningStart),
+          stress: p.yieldStrength * (0.78 + 0.12 * Math.pow(ratio, 1.7))
+        });
+      }
+      for (let i = 1; i <= 8; i++) {
+        const ratio = i / 8;
+        points.push({
+          strain: orientationPeakStrain + ratio * (p.fractureStrain - orientationPeakStrain),
+          stress: p.yieldStrength * 0.9 + (fractureStress - p.yieldStrength * 0.9) * ratio
+        });
+      }
+      return { points, yieldStrainPct: ppYieldStrain, utsStrainPct, fractureStress };
+    }
+
     const utsStrainPct = yieldStrainPct + 0.4 * (p.fractureStrain - yieldStrainPct);
     const hasNecking = p.fractureStrain - utsStrainPct > COINCIDENT_STRAIN_EPS;
     const fractureStress = hasNecking ? p.uts * 0.85 : p.uts;
@@ -174,7 +206,7 @@ const materialGroups = [
     return { points, yieldStrainPct, utsStrainPct, fractureStress };
   }
 
-  function draw(canvas: HTMLCanvasElement, p: Params, labels: { stressAxis: string; strainAxis: string }) {
+  function draw(canvas: HTMLCanvasElement, p: Params, profile: CurveProfile, labels: { stressAxis: string; strainAxis: string }) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const dpr = window.devicePixelRatio || 1;
@@ -186,13 +218,12 @@ const materialGroups = [
     ctx.clearRect(0, 0, width, height);
 
     const style = getComputedStyle(document.documentElement);
-    const ink = style.getPropertyValue('--ink').trim() || '#1c2730';
     const muted = style.getPropertyValue('--muted').trim() || '#60707d';
     const line = style.getPropertyValue('--line').trim() || '#dbe1e5';
     const accent = style.getPropertyValue('--accent').trim() || '#176b70';
     const wash = style.getPropertyValue('--wash').trim() || '#f5f7f8';
 
-    const { points, yieldStrainPct, utsStrainPct } = computeCurve(p);
+    const { points, yieldStrainPct, utsStrainPct } = computeCurve(p, profile);
     const maxStrain = Math.max(p.fractureStrain * 1.15, 1);
     const maxStress = Math.max(p.uts * 1.15, 1);
 
@@ -274,15 +305,19 @@ const materialGroups = [
       ctx.lineWidth = 1.5;
       ctx.stroke();
     };
-    if (p.fractureStrain - yieldStrainPct > COINCIDENT_STRAIN_EPS) markPoint(yieldStrainPct, p.yieldStrength, '#c98a2c');
-    if (p.fractureStrain - utsStrainPct > COINCIDENT_STRAIN_EPS) markPoint(utsStrainPct, p.uts, accent);
+    const yieldIsDistinct = p.fractureStrain - yieldStrainPct > COINCIDENT_STRAIN_EPS;
+    const utsIsDistinct = p.fractureStrain - utsStrainPct > COINCIDENT_STRAIN_EPS;
+    if (yieldIsDistinct) markPoint(yieldStrainPct, p.yieldStrength, '#c98a2c');
+    if (utsIsDistinct && Math.abs(utsStrainPct - yieldStrainPct) > COINCIDENT_STRAIN_EPS) {
+      markPoint(utsStrainPct, p.uts, accent);
+    }
     markPoint(p.fractureStrain, points[points.length - 1].stress, '#b0413e');
   }
 
   function clampParams(p: Params): Params {
     const e = Math.min(Math.max(p.e, 1), 450);
-    const yieldStrength = Math.min(Math.max(p.yieldStrength, 10), 1600);
-    const uts = Math.min(Math.max(p.uts, yieldStrength), 2000);
+    const yieldStrength = Math.min(Math.max(p.yieldStrength, 10), 3500);
+    const uts = Math.min(Math.max(p.uts, yieldStrength), 3500);
     const yieldStrainPct = (yieldStrength / (e * 1000)) * 100;
     const fractureStrain = Math.min(Math.max(p.fractureStrain, yieldStrainPct), 200);
     return { e, yieldStrength, uts, fractureStrain };
@@ -292,8 +327,6 @@ const materialGroups = [
     const canvas = root.querySelector<HTMLCanvasElement>('[data-ss-canvas]');
     if (!canvas) return;
     const labels = { stressAxis: 'Stress (MPa)', strainAxis: 'Strain (%)' };
-    const customLabel = root.dataset.labelCustom ?? 'Custom';
-    const selectedPrefix = root.dataset.labelSelected ?? 'Selected material';
     const defaults: Params = {
       e: Number(root.dataset.defaultE),
       yieldStrength: Number(root.dataset.defaultYield),
@@ -301,6 +334,7 @@ const materialGroups = [
       fractureStrain: Number(root.dataset.defaultFracture)
     };
     let params: Params = { ...defaults };
+    let profile: CurveProfile = 'generic';
 
     const ranges = {
       e: root.querySelector<HTMLInputElement>('[data-ss-range="e"]'),
@@ -323,7 +357,7 @@ const materialGroups = [
       });
     };
 
-    const redraw = () => draw(canvas, params, labels);
+    const redraw = () => draw(canvas, params, profile, labels);
 
     const update = (patch: Partial<Params>) => {
       params = clampParams({ ...params, ...patch });
@@ -331,15 +365,7 @@ const materialGroups = [
       redraw();
     };
 
-    const selectedLabel = root.querySelector<HTMLElement>('[data-ss-selected]');
     const presetButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-ss-preset]')];
-    const groupButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-ss-group]')];
-    const materialRows = [...root.querySelectorAll<HTMLElement>('[data-ss-material-row]')];
-    const compositeNote = root.querySelector<HTMLElement>('[data-ss-composite-note]');
-
-    const setSelectedLabel = (name: string) => {
-      if (selectedLabel) selectedLabel.textContent = `${selectedPrefix}: ${name}`;
-    };
     const setActivePreset = (id: string | null) => {
       presetButtons.forEach(button => {
         const active = button.dataset.presetId === id;
@@ -352,7 +378,7 @@ const materialGroups = [
     // the demo into a "Custom" state until another preset is picked or Reset is pressed.
     const updateManual = (patch: Partial<Params>) => {
       setActivePreset(null);
-      setSelectedLabel(customLabel);
+      profile = 'generic';
       update(patch);
     };
 
@@ -364,18 +390,8 @@ const materialGroups = [
         fractureStrain: Number(button.dataset.presetFracture)
       };
       setActivePreset(button.dataset.presetId ?? null);
-      setSelectedLabel(button.dataset.presetLabel ?? customLabel);
+      profile = (button.dataset.presetProfile as CurveProfile) || 'generic';
       update(patch);
-    };
-
-    const setActiveGroup = (groupId: string) => {
-      groupButtons.forEach(button => {
-        const active = button.dataset.ssGroup === groupId;
-        button.classList.toggle('is-active', active);
-        button.setAttribute('aria-pressed', String(active));
-      });
-      materialRows.forEach(row => { row.hidden = row.dataset.ssMaterialRow !== groupId; });
-      if (compositeNote) compositeNote.hidden = groupId !== 'composites';
     };
 
     (Object.keys(ranges) as (keyof Params)[]).forEach(key => {
@@ -383,12 +399,11 @@ const materialGroups = [
       numbers[key]?.addEventListener('input', () => updateManual({ [key]: Number(numbers[key]!.value) } as Partial<Params>));
     });
 
-    groupButtons.forEach(button => button.addEventListener('click', () => setActiveGroup(button.dataset.ssGroup ?? '')));
     presetButtons.forEach(button => button.addEventListener('click', () => applyPreset(button)));
 
     root.querySelector('[data-ss-reset]')?.addEventListener('click', () => {
       setActivePreset(null);
-      setSelectedLabel(customLabel);
+      profile = 'generic';
       update({ ...defaults });
     });
 
@@ -400,11 +415,6 @@ const materialGroups = [
 
 <style>
   .ss-demo{border:1px solid var(--line);border-radius:4px;background:var(--paper);padding:1.25rem;margin:1.75rem 0}
-  .ss-presets{padding-bottom:1.1rem;margin-bottom:1.1rem;border-bottom:1px solid var(--line)}
-  .ss-presets-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:.6rem}
-  .ss-presets-title{font-weight:650;color:var(--ink)}
-  .ss-preset-groups,.ss-material-row{display:flex;flex-wrap:wrap;gap:.5rem}
-  .ss-preset-materials{margin-top:.5rem}
   .ss-demo-note{margin:0 0 1.1rem}
   .ss-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem 1.5rem}
   .ss-field{display:flex;flex-direction:column;gap:.35rem;font-size:.9rem}
@@ -421,6 +431,13 @@ const materialGroups = [
   .ss-dot-yield{background:#c98a2c}
   .ss-dot-uts{background:var(--accent)}
   .ss-dot-fracture{background:#b0413e}
-  .ss-demo .button{margin-top:1rem;font-size:.9rem}
+  .ss-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+  .ss-demo .button{font-size:.9rem}
+  .ss-demo.is-compact{padding:1rem;margin:1.25rem 0}
+  .ss-demo.is-compact .ss-controls{gap:.75rem 1rem}
+  .ss-demo.is-compact .ss-graph{margin-top:1rem}
+  .ss-demo.is-compact .ss-graph canvas{height:210px}
+  .ss-demo.is-compact .ss-actions{margin-top:.75rem}
   @media(max-width:760px){.ss-controls{grid-template-columns:1fr}.ss-graph canvas{height:220px}}
+  @media(max-width:760px){.ss-demo.is-compact .ss-graph canvas{height:190px}}
 </style>
