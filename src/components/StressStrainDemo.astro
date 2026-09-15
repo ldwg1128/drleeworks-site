@@ -1,0 +1,426 @@
+---
+// Self-contained, locale-aware interactive demo. No JS framework or chart library is added;
+// rendering uses a plain <canvas> driven by a small vanilla-JS module loaded once per page.
+import type { Lang } from '../i18n/ui';
+const { lang } = Astro.props as { lang: Lang };
+
+const copy = {
+  ko: {
+    young: '영률 (E)', yield: '항복강도', uts: '인장강도 (UTS)', fracture: '파단변형률', reset: '초기화',
+    stressAxis: 'Stress (MPa)', strainAxis: 'Strain (%)',
+    unitE: 'GPa', unitStress: 'MPa', unitStrain: '%',
+    elastic: '탄성 영역', plastic: '소성 영역', yieldPoint: '항복점', utsPoint: 'UTS', fracturePoint: '파단점',
+    materialPresets: '대표 재료', custom: '사용자 설정', selectedMaterial: '선택 재료',
+    compositeNote: '복합재료 값은 대표적인 섬유방향 인장 특성을 단순화하여 나타낸 값입니다.',
+    demoNote: '대표 재료를 선택하면 일반적인 물성값을 이용한 응력–변형률 곡선을 확인할 수 있습니다. 표시되는 값은 교육용 대표값이며 실제 물성은 재료의 등급, 제조방법 및 시험조건에 따라 달라질 수 있습니다.'
+  },
+  en: {
+    young: "Young's Modulus (E)", yield: 'Yield Strength', uts: 'Ultimate Tensile Strength (UTS)', fracture: 'Fracture Strain', reset: 'Reset',
+    stressAxis: 'Stress (MPa)', strainAxis: 'Strain (%)',
+    unitE: 'GPa', unitStress: 'MPa', unitStrain: '%',
+    elastic: 'Elastic region', plastic: 'Plastic region', yieldPoint: 'Yield point', utsPoint: 'UTS', fracturePoint: 'Fracture point',
+    materialPresets: 'Material Presets', custom: 'Custom', selectedMaterial: 'Selected material',
+    compositeNote: 'Composite values are simplified representative tensile properties along the fiber direction.',
+    demoNote: 'Selecting a representative material shows a stress\u2013strain curve built from typical property values. The values shown are educational representative values; actual properties vary with material grade, manufacturing process, and test conditions.'
+  }
+} as const;
+const t = copy[lang];
+
+const defaults = { e: 200, yieldStrength: 250, uts: 400, fractureStrain: 20 };
+
+// Representative, education-only property values (not tied to a specific product or grade).
+// Ceramics and composites set yieldStrength = uts and derive fractureStrain from E and uts,
+// so the shared curve model naturally collapses to a straight elastic line to fracture (brittle),
+// instead of forcing every material through an Elastic-Yield-Plastic-UTS-Fracture path.
+const materialGroups = [
+  {
+    id: 'metals', ko: '금속', en: 'Metals',
+    materials: [
+      { id: 'steel', label: 'Structural Steel', e: 200, yieldStrength: 250, uts: 400, fractureStrain: 20 },
+      { id: 'aluminum', label: 'Aluminum Alloy', e: 70, yieldStrength: 270, uts: 310, fractureStrain: 12 }
+    ]
+  },
+  {
+    id: 'polymers', ko: '고분자', en: 'Polymers',
+    materials: [
+      { id: 'pp', label: 'Polypropylene (PP)', e: 1.5, yieldStrength: 30, uts: 35, fractureStrain: 150 },
+      { id: 'pc', label: 'Polycarbonate (PC)', e: 2.3, yieldStrength: 60, uts: 65, fractureStrain: 100 }
+    ]
+  },
+  {
+    id: 'ceramics', ko: '세라믹', en: 'Ceramics',
+    materials: [
+      { id: 'alumina', label: 'Alumina', e: 370, yieldStrength: 300, uts: 300, fractureStrain: 0.081 },
+      { id: 'sic', label: 'Silicon Carbide', e: 410, yieldStrength: 300, uts: 300, fractureStrain: 0.073 }
+    ]
+  },
+  {
+    id: 'composites', ko: '복합재료', en: 'Composites',
+    materials: [
+      { id: 'gfrp', label: 'GFRP', e: 40, yieldStrength: 800, uts: 800, fractureStrain: 2.0 },
+      { id: 'cfrp', label: 'CFRP', e: 140, yieldStrength: 1500, uts: 1500, fractureStrain: 1.07 }
+    ]
+  }
+] as const;
+---
+
+<div class="ss-demo" data-ss-demo data-lang={lang}
+  data-default-e={defaults.e} data-default-yield={defaults.yieldStrength}
+  data-default-uts={defaults.uts} data-default-fracture={defaults.fractureStrain}
+  data-label-custom={t.custom} data-label-selected={t.selectedMaterial}>
+  <div class="ss-presets">
+    <div class="ss-presets-head">
+      <span class="ss-presets-title">{t.materialPresets}</span>
+      <span class="meta" data-ss-selected>{t.selectedMaterial}: {t.custom}</span>
+    </div>
+    <div class="ss-preset-groups">
+      {materialGroups.map((group, index) => (
+        <button type="button" class:list={['tag-filter-button', { 'is-active': index === 0 }]}
+          data-ss-group={group.id} aria-pressed={index === 0 ? 'true' : 'false'}>{group[lang]}</button>
+      ))}
+    </div>
+    <div class="ss-preset-materials">
+      {materialGroups.map((group, index) => (
+        <div class="ss-material-row" data-ss-material-row={group.id} hidden={index !== 0}>
+          {group.materials.map(material => (
+            <button type="button" class="tag-filter-button" data-ss-preset
+              data-preset-id={material.id} data-preset-label={material.label}
+              data-preset-e={material.e} data-preset-yield={material.yieldStrength}
+              data-preset-uts={material.uts} data-preset-fracture={material.fractureStrain}
+              aria-pressed="false">{material.label}</button>
+          ))}
+        </div>
+      ))}
+    </div>
+    <p class="meta" data-ss-composite-note hidden>{t.compositeNote}</p>
+  </div>
+  <p class="meta ss-demo-note">{t.demoNote}</p>
+  <div class="ss-controls">
+    <label class="ss-field">
+      <span class="ss-field-label">{t.young} <em>({t.unitE})</em></span>
+      <span class="ss-field-inputs">
+        <input type="range" data-ss-range="e" min="1" max="450" step="0.5" value={defaults.e} />
+        <input type="number" data-ss-number="e" min="1" max="450" step="0.5" value={defaults.e} />
+      </span>
+    </label>
+    <label class="ss-field">
+      <span class="ss-field-label">{t.yield} <em>({t.unitStress})</em></span>
+      <span class="ss-field-inputs">
+        <input type="range" data-ss-range="yield" min="10" max="1600" step="5" value={defaults.yieldStrength} />
+        <input type="number" data-ss-number="yield" min="10" max="1600" step="5" value={defaults.yieldStrength} />
+      </span>
+    </label>
+    <label class="ss-field">
+      <span class="ss-field-label">{t.uts} <em>({t.unitStress})</em></span>
+      <span class="ss-field-inputs">
+        <input type="range" data-ss-range="uts" min="10" max="2000" step="5" value={defaults.uts} />
+        <input type="number" data-ss-number="uts" min="10" max="2000" step="5" value={defaults.uts} />
+      </span>
+    </label>
+    <label class="ss-field">
+      <span class="ss-field-label">{t.fracture} <em>({t.unitStrain})</em></span>
+      <span class="ss-field-inputs">
+        <input type="range" data-ss-range="fracture" min="0.01" max="200" step="0.01" value={defaults.fractureStrain} />
+        <input type="number" data-ss-number="fracture" min="0.01" max="200" step="0.01" value={defaults.fractureStrain} />
+      </span>
+    </label>
+  </div>
+  <div class="ss-graph">
+    <canvas data-ss-canvas></canvas>
+  </div>
+  <div class="ss-legend">
+    <span><i class="ss-dot ss-dot-yield"></i>{t.yieldPoint}</span>
+    <span><i class="ss-dot ss-dot-uts"></i>{t.utsPoint}</span>
+    <span><i class="ss-dot ss-dot-fracture"></i>{t.fracturePoint}</span>
+  </div>
+  <button type="button" class="button secondary" data-ss-reset>{t.reset}</button>
+</div>
+
+<script>
+  type Params = { e: number; yieldStrength: number; uts: number; fractureStrain: number };
+
+  // Points closer together than this (in % strain) are treated as the same physical point,
+  // so a material whose yield strength equals its UTS renders as a single elastic-to-fracture
+  // line (brittle) instead of a forced Elastic-Yield-Plastic-UTS path.
+  const COINCIDENT_STRAIN_EPS = 0.05;
+
+  function computeCurve(p: Params) {
+    const eMpa = p.e * 1000;
+    const yieldStrainPct = (p.yieldStrength / eMpa) * 100;
+    const utsStrainPct = yieldStrainPct + 0.4 * (p.fractureStrain - yieldStrainPct);
+    const hasNecking = p.fractureStrain - utsStrainPct > COINCIDENT_STRAIN_EPS;
+    const fractureStress = hasNecking ? p.uts * 0.85 : p.uts;
+
+    const points: { strain: number; stress: number }[] = [];
+    const elasticSteps = 20;
+    for (let i = 0; i <= elasticSteps; i++) {
+      const strain = (yieldStrainPct * i) / elasticSteps;
+      points.push({ strain, stress: eMpa * (strain / 100) });
+    }
+    const hardeningSteps = 30;
+    for (let i = 1; i <= hardeningSteps; i++) {
+      const tRatio = i / hardeningSteps;
+      const strain = yieldStrainPct + tRatio * (utsStrainPct - yieldStrainPct);
+      const stress = p.yieldStrength + (p.uts - p.yieldStrength) * Math.pow(tRatio, 0.6);
+      points.push({ strain, stress });
+    }
+    const neckingSteps = 20;
+    for (let i = 1; i <= neckingSteps; i++) {
+      const tRatio = i / neckingSteps;
+      const strain = utsStrainPct + tRatio * (p.fractureStrain - utsStrainPct);
+      const stress = p.uts + (fractureStress - p.uts) * tRatio;
+      points.push({ strain, stress });
+    }
+    return { points, yieldStrainPct, utsStrainPct, fractureStress };
+  }
+
+  function draw(canvas: HTMLCanvasElement, p: Params, labels: { stressAxis: string; strainAxis: string }) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+
+    const style = getComputedStyle(document.documentElement);
+    const ink = style.getPropertyValue('--ink').trim() || '#1c2730';
+    const muted = style.getPropertyValue('--muted').trim() || '#60707d';
+    const line = style.getPropertyValue('--line').trim() || '#dbe1e5';
+    const accent = style.getPropertyValue('--accent').trim() || '#176b70';
+    const wash = style.getPropertyValue('--wash').trim() || '#f5f7f8';
+
+    const { points, yieldStrainPct, utsStrainPct } = computeCurve(p);
+    const maxStrain = Math.max(p.fractureStrain * 1.15, 1);
+    const maxStress = Math.max(p.uts * 1.15, 1);
+
+    const padLeft = 52;
+    const padBottom = 30;
+    const padTop = 14;
+    const padRight = 12;
+    const plotW = Math.max(width - padLeft - padRight, 10);
+    const plotH = Math.max(height - padTop - padBottom, 10);
+
+    const xOf = (strain: number) => padLeft + (strain / maxStrain) * plotW;
+    const yOf = (stress: number) => padTop + plotH - (stress / maxStress) * plotH;
+
+    // region shading
+    ctx.fillStyle = wash;
+    ctx.fillRect(xOf(0), padTop, xOf(yieldStrainPct) - xOf(0), plotH);
+
+    // axes grid
+    ctx.strokeStyle = line;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padLeft, padTop);
+    ctx.lineTo(padLeft, padTop + plotH);
+    ctx.lineTo(padLeft + plotW, padTop + plotH);
+    ctx.stroke();
+
+    ctx.fillStyle = muted;
+    ctx.font = '11px Inter, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i <= 4; i++) {
+      const stress = (maxStress / 4) * i;
+      const y = yOf(stress);
+      ctx.fillText(Math.round(stress).toString(), padLeft - 8, y);
+      ctx.strokeStyle = line;
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(padLeft, y);
+      ctx.lineTo(padLeft + plotW, y);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    for (let i = 0; i <= 4; i++) {
+      const strain = (maxStrain / 4) * i;
+      const x = xOf(strain);
+      ctx.fillText(strain.toFixed(1), x, padTop + plotH + 8);
+    }
+
+    ctx.save();
+    ctx.translate(12, padTop + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText(labels.stressAxis, 0, 0);
+    ctx.restore();
+    ctx.textAlign = 'center';
+    ctx.fillText(labels.strainAxis, padLeft + plotW / 2, padTop + plotH + 20);
+
+    // curve
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    points.forEach((point, index) => {
+      const x = xOf(point.strain);
+      const y = yOf(point.stress);
+      if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // markers - a distinct yield/UTS point is only drawn when it differs from the fracture
+    // point; brittle presets (yield == uts) collapse to a single fracture/failure marker.
+    const markPoint = (strain: number, stress: number, color: string) => {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(xOf(strain), yOf(stress), 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    };
+    if (p.fractureStrain - yieldStrainPct > COINCIDENT_STRAIN_EPS) markPoint(yieldStrainPct, p.yieldStrength, '#c98a2c');
+    if (p.fractureStrain - utsStrainPct > COINCIDENT_STRAIN_EPS) markPoint(utsStrainPct, p.uts, accent);
+    markPoint(p.fractureStrain, points[points.length - 1].stress, '#b0413e');
+  }
+
+  function clampParams(p: Params): Params {
+    const e = Math.min(Math.max(p.e, 1), 450);
+    const yieldStrength = Math.min(Math.max(p.yieldStrength, 10), 1600);
+    const uts = Math.min(Math.max(p.uts, yieldStrength), 2000);
+    const yieldStrainPct = (yieldStrength / (e * 1000)) * 100;
+    const fractureStrain = Math.min(Math.max(p.fractureStrain, yieldStrainPct), 200);
+    return { e, yieldStrength, uts, fractureStrain };
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-ss-demo]').forEach(root => {
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-ss-canvas]');
+    if (!canvas) return;
+    const labels = { stressAxis: 'Stress (MPa)', strainAxis: 'Strain (%)' };
+    const customLabel = root.dataset.labelCustom ?? 'Custom';
+    const selectedPrefix = root.dataset.labelSelected ?? 'Selected material';
+    const defaults: Params = {
+      e: Number(root.dataset.defaultE),
+      yieldStrength: Number(root.dataset.defaultYield),
+      uts: Number(root.dataset.defaultUts),
+      fractureStrain: Number(root.dataset.defaultFracture)
+    };
+    let params: Params = { ...defaults };
+
+    const ranges = {
+      e: root.querySelector<HTMLInputElement>('[data-ss-range="e"]'),
+      yieldStrength: root.querySelector<HTMLInputElement>('[data-ss-range="yield"]'),
+      uts: root.querySelector<HTMLInputElement>('[data-ss-range="uts"]'),
+      fractureStrain: root.querySelector<HTMLInputElement>('[data-ss-range="fracture"]')
+    };
+    const numbers = {
+      e: root.querySelector<HTMLInputElement>('[data-ss-number="e"]'),
+      yieldStrength: root.querySelector<HTMLInputElement>('[data-ss-number="yield"]'),
+      uts: root.querySelector<HTMLInputElement>('[data-ss-number="uts"]'),
+      fractureStrain: root.querySelector<HTMLInputElement>('[data-ss-number="fracture"]')
+    };
+
+    const syncInputs = () => {
+      (Object.keys(params) as (keyof Params)[]).forEach(key => {
+        const value = String(params[key]);
+        if (ranges[key]) ranges[key]!.value = value;
+        if (numbers[key]) numbers[key]!.value = value;
+      });
+    };
+
+    const redraw = () => draw(canvas, params, labels);
+
+    const update = (patch: Partial<Params>) => {
+      params = clampParams({ ...params, ...patch });
+      syncInputs();
+      redraw();
+    };
+
+    const selectedLabel = root.querySelector<HTMLElement>('[data-ss-selected]');
+    const presetButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-ss-preset]')];
+    const groupButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-ss-group]')];
+    const materialRows = [...root.querySelectorAll<HTMLElement>('[data-ss-material-row]')];
+    const compositeNote = root.querySelector<HTMLElement>('[data-ss-composite-note]');
+
+    const setSelectedLabel = (name: string) => {
+      if (selectedLabel) selectedLabel.textContent = `${selectedPrefix}: ${name}`;
+    };
+    const setActivePreset = (id: string | null) => {
+      presetButtons.forEach(button => {
+        const active = button.dataset.presetId === id;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+    };
+
+    // Any manual slider/number change deviates from the preset's exact values, so it drops
+    // the demo into a "Custom" state until another preset is picked or Reset is pressed.
+    const updateManual = (patch: Partial<Params>) => {
+      setActivePreset(null);
+      setSelectedLabel(customLabel);
+      update(patch);
+    };
+
+    const applyPreset = (button: HTMLButtonElement) => {
+      const patch: Params = {
+        e: Number(button.dataset.presetE),
+        yieldStrength: Number(button.dataset.presetYield),
+        uts: Number(button.dataset.presetUts),
+        fractureStrain: Number(button.dataset.presetFracture)
+      };
+      setActivePreset(button.dataset.presetId ?? null);
+      setSelectedLabel(button.dataset.presetLabel ?? customLabel);
+      update(patch);
+    };
+
+    const setActiveGroup = (groupId: string) => {
+      groupButtons.forEach(button => {
+        const active = button.dataset.ssGroup === groupId;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      materialRows.forEach(row => { row.hidden = row.dataset.ssMaterialRow !== groupId; });
+      if (compositeNote) compositeNote.hidden = groupId !== 'composites';
+    };
+
+    (Object.keys(ranges) as (keyof Params)[]).forEach(key => {
+      ranges[key]?.addEventListener('input', () => updateManual({ [key]: Number(ranges[key]!.value) } as Partial<Params>));
+      numbers[key]?.addEventListener('input', () => updateManual({ [key]: Number(numbers[key]!.value) } as Partial<Params>));
+    });
+
+    groupButtons.forEach(button => button.addEventListener('click', () => setActiveGroup(button.dataset.ssGroup ?? '')));
+    presetButtons.forEach(button => button.addEventListener('click', () => applyPreset(button)));
+
+    root.querySelector('[data-ss-reset]')?.addEventListener('click', () => {
+      setActivePreset(null);
+      setSelectedLabel(customLabel);
+      update({ ...defaults });
+    });
+
+    new ResizeObserver(() => redraw()).observe(canvas);
+    syncInputs();
+    redraw();
+  });
+</script>
+
+<style>
+  .ss-demo{border:1px solid var(--line);border-radius:4px;background:var(--paper);padding:1.25rem;margin:1.75rem 0}
+  .ss-presets{padding-bottom:1.1rem;margin-bottom:1.1rem;border-bottom:1px solid var(--line)}
+  .ss-presets-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:.6rem}
+  .ss-presets-title{font-weight:650;color:var(--ink)}
+  .ss-preset-groups,.ss-material-row{display:flex;flex-wrap:wrap;gap:.5rem}
+  .ss-preset-materials{margin-top:.5rem}
+  .ss-demo-note{margin:0 0 1.1rem}
+  .ss-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem 1.5rem}
+  .ss-field{display:flex;flex-direction:column;gap:.35rem;font-size:.9rem}
+  .ss-field-label{color:var(--ink);font-weight:600}
+  .ss-field-label em{color:var(--muted);font-style:normal;font-weight:400}
+  .ss-field-inputs{display:flex;align-items:center;gap:.6rem}
+  .ss-field-inputs input[type=range]{flex:1;accent-color:var(--accent)}
+  .ss-field-inputs input[type=number]{width:5.5rem;border:1px solid var(--line);border-radius:3px;padding:.3rem .4rem;font:inherit;color:var(--ink);background:var(--paper)}
+  .ss-graph{margin-top:1.25rem;border:1px solid var(--line);border-radius:4px;background:var(--paper)}
+  .ss-graph canvas{display:block;width:100%;height:280px}
+  .ss-legend{display:flex;flex-wrap:wrap;gap:1rem;margin-top:.75rem;font-size:.85rem;color:var(--muted)}
+  .ss-legend span{display:inline-flex;align-items:center;gap:.4rem}
+  .ss-dot{width:.6rem;height:.6rem;border-radius:50%;display:inline-block}
+  .ss-dot-yield{background:#c98a2c}
+  .ss-dot-uts{background:var(--accent)}
+  .ss-dot-fracture{background:#b0413e}
+  .ss-demo .button{margin-top:1rem;font-size:.9rem}
+  @media(max-width:760px){.ss-controls{grid-template-columns:1fr}.ss-graph canvas{height:220px}}
+</style>

@@ -4,7 +4,7 @@ export type Lang = keyof typeof languages;
 export const ui = {
   ko: {
     home: '홈', software: '소프트웨어', engineering: '공학', about: '소개',
-    openSource: '오픈소스 SW', bugReports: '버그 신고', computing: '컴퓨팅', tech: '테크', daily: '기록', notes: '노트', recommendations: '추천', postsLabel: '게시물', tagsLabel: '태그', allPostsLabel: '전체 보기', activeTagLabel: '선택 태그', emptyPosts: '게시물이 아직 없습니다.', supportNav: '후원', menu: '메뉴', closeMenu: '메뉴 닫기',
+    openSource: '오픈소스 SW', bugReports: '버그 신고', computing: '컴퓨팅', tech: '테크', daily: '기록', notes: '노트', recommendations: '추천', interactive: '인터렉티브', postsLabel: '게시물', tagsLabel: '태그', allPostsLabel: '전체 보기', activeTagLabel: '선택 태그', emptyPosts: '게시물이 아직 없습니다.', supportNav: '후원', menu: '메뉴', closeMenu: '메뉴 닫기',
     tagline: '새로운 기술을 직접 써보고, 만들고, 기록합니다',
     intro: 'AI와 새로운 기술을 직접 사용해 보고, 필요한 프로그램도 만들어 봅니다.\n공학·연구 과정에서 얻은 정보와 경험도 함께 기록합니다.',
     featuredSoftware: '주요 소프트웨어', recommendedPosts: '추천 글', updated: '수정일', recentPosts: '최근 글', latestPosts: '최근 글', contentFeed: '새로운 콘텐츠', topics: '엔지니어링 / 연구 분야', aboutSite: 'DrLeeWorks 소개',
@@ -16,6 +16,7 @@ export const ui = {
     supportMessage: '글이나 프로그램이 도움이 되었다면 커피 한 잔으로 응원해주실 수 있습니다.\n후원 여부와 관계없이 공개된 자료는 자유롭게 이용하실 수 있습니다.', supportButton: '☕ 커피 한 잔 후원하기', close: '닫기',
     softwareIntro: '프로그램 정보, 설치 파일, 체크섬과 릴리스 기록을 확인할 수 있습니다.',
     engineeringIntro: '재료, 해석, 실험 및 공학 도구에 관한 체계적인 노트입니다.',
+    interactiveIntro: '직접 값을 조작하며 개념을 확인할 수 있는 인터랙티브 데모 모음입니다.',
     aboutHeading: '새로운 기술을 직접 써보고, 만들고, 기록합니다',
     aboutText: 'DrLeeWorks는 새로운 기술을 직접 사용해 보고, 그 과정에서 알게 된 내용과 경험을 기록하는 개인 사이트입니다.',
     aboutParagraphs: [
@@ -28,7 +29,7 @@ export const ui = {
   },
   en: {
     home: 'Home', software: 'Software', engineering: 'Engineering', about: 'About',
-    openSource: 'Open Source', bugReports: 'Report a Bug', computing: 'Computing', tech: 'Tech', daily: 'Note', notes: 'Notes', recommendations: 'Recommendations', postsLabel: 'Posts', tagsLabel: 'Tags', allPostsLabel: 'View all', activeTagLabel: 'Selected tag', emptyPosts: 'No posts yet.', supportNav: 'Support', menu: 'Menu', closeMenu: 'Close menu',
+    openSource: 'Open Source', bugReports: 'Report a Bug', computing: 'Computing', tech: 'Tech', daily: 'Note', notes: 'Notes', recommendations: 'Recommendations', interactive: 'Interactive', postsLabel: 'Posts', tagsLabel: 'Tags', allPostsLabel: 'View all', activeTagLabel: 'Selected tag', emptyPosts: 'No posts yet.', supportNav: 'Support', menu: 'Menu', closeMenu: 'Close menu',
     tagline: 'Trying, building, and documenting new technology',
     intro: 'I explore AI and new technologies firsthand and build useful programs along the way.\nI also document insights and experience from engineering and research.',
     featuredSoftware: 'Featured Software', recommendedPosts: 'Recommended Posts', updated: 'Updated', recentPosts: 'Recent Posts', latestPosts: 'Latest Posts', contentFeed: 'Latest from DrLeeWorks', topics: 'Engineering / Research Topics', aboutSite: 'About DrLeeWorks',
@@ -40,6 +41,7 @@ export const ui = {
     supportMessage: 'If you find the articles or software useful, you can support DrLeeWorks with a coffee.\nAll publicly shared content remains freely available regardless of support.', supportButton: '☕ Buy me a coffee', close: 'Close',
     softwareIntro: 'Software details, installers, checksums, and release history.',
     engineeringIntro: 'Structured notes on materials, analysis, experiments, and engineering utilities.',
+    interactiveIntro: 'Hands-on interactive demos where you can adjust values and see concepts in action.',
     aboutHeading: 'Exploring, Building, and Documenting New Technologies',
     aboutText: 'DrLeeWorks is a personal site where I explore new technologies and document what I learn along the way.',
     aboutParagraphs: [

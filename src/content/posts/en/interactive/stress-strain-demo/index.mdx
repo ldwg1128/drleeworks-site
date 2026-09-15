@@ -1,0 +1,36 @@
+---
+title: Interactive Stress–Strain Curve Demo
+slug: stress-strain-demo
+translationKey: stress-strain-demo
+lang: en
+published: 2026-09-15
+category: Interactive
+tags:
+  - mechanics-of-materials
+  - interactive
+author: DrLeeWorks
+summary: Adjust Young's modulus, yield strength, UTS, and fracture strain to see how the stress–strain curve changes.
+recommended: false
+draft: false
+---
+
+import StressStrainDemo from '../../../../../components/StressStrainDemo.astro';
+
+A stress–strain curve shows how a material deforms as load is applied to it, and it is one of the most fundamental tools used in mechanics of materials and engineering design.
+
+Use the sliders or number inputs below to change the values — the graph updates immediately so you can see how each parameter shapes the curve.
+
+<StressStrainDemo lang="en" />
+
+## What the parameters mean
+
+- **Young's Modulus (E)**: the ratio of stress to strain in the elastic region, representing how stiff the material is. A larger E means more stress for the same strain, so the initial slope of the curve becomes steeper.
+- **Yield Strength**: the stress at which the elastic region ends and permanent (plastic) deformation begins. Beyond this point, the material no longer returns to its original shape once the load is removed.
+- **Ultimate Tensile Strength (UTS)**: the maximum stress the material can withstand. It corresponds to the peak of the curve; beyond this point, localized necking begins.
+- **Fracture Strain**: the strain at the moment the material breaks, indicating how ductile the material is.
+
+## About this demo
+
+This demo does not implement a precise constitutive model for any real material. Instead, it uses a simplified curve — a straight line for the elastic region and a smooth curve for the plastic region — so that the effect of each parameter is easy to understand for educational purposes. Internal constraints prevent physically impossible combinations of values (for example, a yield strength greater than the UTS).
+
+Keep in mind that the behavior of real materials is far more complex, depending on factors such as strain hardening, temperature, and strain rate.
