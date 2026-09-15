@@ -24,6 +24,20 @@ const lang = post.data.lang as Lang;
 const t = ui[lang];
 
 const usesInteractiveMarkers = hasInteractiveMarkers(post.body);
+const postAssetUrls = import.meta.glob('/src/content/posts/**/*.{png,jpg,jpeg,webp,avif,gif,svg}', {
+  eager: true,
+  query: '?url',
+  import: 'default'
+}) as Record<string, string>;
+
+function resolvePostAssetUrls(markdown: string) {
+  const postDirectory = post.id.replace(/\/index\.(md|mdx)$/, '');
+  return markdown.replace(/(\]\()(\.\/[^)\s]+)(\))/g, (match, prefix: string, relativePath: string, suffix: string) => {
+    const assetKey = `/src/content/posts/${postDirectory}/${relativePath.slice(2)}`;
+    return `${prefix}${postAssetUrls[assetKey] ?? match.slice(prefix.length, -suffix.length)}${suffix}`;
+  });
+}
+
 type Block = { type: 'html'; html: string } | { type: 'component'; id: string };
 let Content: Awaited<ReturnType<typeof render>>['Content'] | undefined;
 let blocks: Block[] = [];
@@ -31,7 +45,7 @@ if (usesInteractiveMarkers) {
   const processor = await getSharedMarkdownProcessor();
   blocks = await Promise.all(splitByInteractiveMarkers(post.body).map(async (segment): Promise<Block> => {
     if (segment.type === 'marker') return { type: 'component', id: segment.id };
-    const rendered = await processor.render(segment.text);
+    const rendered = await processor.render(resolvePostAssetUrls(segment.text));
     return { type: 'html', html: rendered.code };
   }));
 } else {
