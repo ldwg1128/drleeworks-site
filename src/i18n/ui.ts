@@ -5,7 +5,7 @@ export const ui = {
   ko: {
     home: '홈', software: '소프트웨어', engineering: '공학', about: '소개',
     openSource: '오픈소스 SW', bugReports: '버그 신고', computing: '컴퓨팅', tech: '테크', daily: '기록', notes: '노트', recommendations: '추천', interactive: '인터렉티브', postsLabel: '게시물', tagsLabel: '태그', allPostsLabel: '전체 보기', activeTagLabel: '선택 태그', emptyPosts: '게시물이 아직 없습니다.', supportNav: '후원', menu: '메뉴', closeMenu: '메뉴 닫기',
-    tagline: '새로운 기술을 직접 써보고, 만들고, 기록합니다',
+    tagline: '관심 있는 기술과 공학 이야기를 다룹니다',
     intro: 'AI와 새로운 기술을 직접 사용해 보고, 필요한 프로그램도 만들어 봅니다.\n공학·연구 과정에서 얻은 정보와 경험도 함께 기록합니다.',
     featuredSoftware: '주요 소프트웨어', recommendedPosts: '추천 글', updated: '수정일', recentPosts: '최근 글', latestPosts: '최근 글', contentFeed: '새로운 콘텐츠', topics: '엔지니어링 / 연구 분야', aboutSite: 'DrLeeWorks 소개',
     readMore: '자세히 보기', download: '다운로드', downloadWindows: 'Windows용 다운로드', viewRelease: 'GitHub에서 릴리스 보기', overview: '개요', downloadInfo: '다운로드 정보', platform: '플랫폼', distribution: '배포 방식', assetFile: '배포 파일', fileSize: '파일 크기', certificateSubject: '인증서 Subject', certificateThumbprint: '인증서 지문', copy: '복사', copied: '복사되었습니다', allSoftware: '소프트웨어 전체 보기', allPosts: '글 전체 보기',
@@ -17,7 +17,7 @@ export const ui = {
     softwareIntro: '프로그램 정보, 설치 파일, 체크섬과 릴리스 기록을 확인할 수 있습니다.',
     engineeringIntro: '재료, 해석, 실험 및 공학 도구에 관한 체계적인 노트입니다.',
     interactiveIntro: '직접 값을 조작하며 개념을 확인할 수 있는 인터랙티브 데모 모음입니다.',
-    aboutHeading: '새로운 기술을 직접 써보고, 만들고, 기록합니다',
+    aboutHeading: '관심 있는 기술과 공학 이야기를 다룹니다',
     aboutText: 'DrLeeWorks는 새로운 기술을 직접 사용해 보고, 그 과정에서 알게 된 내용과 경험을 기록하는 개인 사이트입니다.',
     aboutParagraphs: [
       'AI와 새로운 도구를 활용해 필요한 프로그램을 직접 만들어 보기도 하고, 공학·연구 과정에서 얻은 전공 정보와 실무 경험도 함께 정리합니다.',

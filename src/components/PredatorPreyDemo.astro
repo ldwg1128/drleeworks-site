@@ -19,7 +19,7 @@ const copy = {
   }
 } as const;
 const t = copy[lang];
-const defaults = { reproductionInterval: 8, starvationTime: 20, safeZone: true, safeZoneSize: 92 };
+const defaults = { reproductionInterval: 8, starvationTime: 10, safeZone: true, safeZoneSize: 92 };
 const defaultSeed = 731942;
 ---
 
@@ -27,16 +27,19 @@ const defaultSeed = 731942;
   data-default-reproduction={defaults.reproductionInterval} data-default-starvation={defaults.starvationTime}
   data-default-safe-zone={defaults.safeZone} data-default-safe-size={defaults.safeZoneSize}>
   <p class="meta pp-note">{t.note}</p>
+  <details class="pp-settings" open>
+    <summary>Detailed Settings</summary>
+    <div class="pp-controls">
+      <label class="pp-field"><span>{t.preyReproduction}<output data-pp-value="reproductionInterval"></output></span><input type="range" data-pp-range="reproductionInterval" min="3" max="20" step="0.5" value={defaults.reproductionInterval} /></label>
+      <label class="pp-field"><span>{t.starvation}<output data-pp-value="starvationTime"></output></span><input type="range" data-pp-range="starvationTime" min="5" max="60" step="1" value={defaults.starvationTime} /></label>
+      <label class="pp-toggle"><input type="checkbox" data-pp-safe checked={defaults.safeZone} /><span>{t.safeZone}</span></label>
+      <label class="pp-field" data-pp-size-field><span>{t.safeSize}<output data-pp-value="safeZoneSize"></output></span><input type="range" data-pp-range="safeZoneSize" min="45" max="170" step="1" value={defaults.safeZoneSize} /></label>
+    </div>
+  </details>
   <div class="pp-world"><canvas data-pp-canvas></canvas></div>
-  <div class="pp-seed-row">
+  <div class="pp-seed-row" hidden>
     <label><span>{t.seed}</span><input type="number" data-pp-seed min="0" max="4294967295" step="1" value={defaultSeed} /></label>
     <button type="button" class="button secondary" data-pp-apply>{t.apply}</button>
-  </div>
-  <div class="pp-controls">
-    <label class="pp-field"><span>{t.preyReproduction}<output data-pp-value="reproductionInterval"></output></span><input type="range" data-pp-range="reproductionInterval" min="3" max="20" step="0.5" value={defaults.reproductionInterval} /></label>
-    <label class="pp-field"><span>{t.starvation}<output data-pp-value="starvationTime"></output></span><input type="range" data-pp-range="starvationTime" min="5" max="60" step="1" value={defaults.starvationTime} /></label>
-    <label class="pp-toggle"><input type="checkbox" data-pp-safe checked={defaults.safeZone} /><span>{t.safeZone}</span></label>
-    <label class="pp-field" data-pp-size-field><span>{t.safeSize}<output data-pp-value="safeZoneSize"></output></span><input type="range" data-pp-range="safeZoneSize" min="45" max="170" step="1" value={defaults.safeZoneSize} /></label>
   </div>
   <div class="pp-actions"><button type="button" class="button" data-pp-run>{t.run}</button><button type="button" class="button secondary" data-pp-new>{t.newWorld}</button><button type="button" class="button secondary" data-pp-reset>{t.reset}</button></div>
   <div class="pp-stats" aria-live="polite"><span><b>{t.prey}</b><strong data-pp-stat="prey">40</strong></span><span><b>{t.predators}</b><strong data-pp-stat="predators">5</strong></span><span><b>{t.time}</b><strong data-pp-stat="time">00:00</strong></span></div>
@@ -106,6 +109,6 @@ const defaultSeed = 731942;
 </script>
 
 <style>
-  .pp-demo{border:1px solid var(--line);border-radius:4px;background:var(--paper);padding:1.25rem;margin:1.75rem 0}.pp-note{margin:0 0 1rem}.pp-world{border:1px solid var(--line);background:var(--wash);border-radius:3px;overflow:hidden}.pp-world canvas{display:block;width:100%;height:380px}.pp-seed-row{display:flex;align-items:end;gap:.6rem;margin-top:.85rem}.pp-seed-row label{display:flex;flex-direction:column;gap:.25rem;color:var(--muted);font-size:.82rem}.pp-seed-row input{width:10rem;border:1px solid var(--line);border-radius:3px;padding:.35rem .45rem;background:var(--paper);color:var(--ink);font:inherit}.pp-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem 1.5rem;margin-top:1.2rem}.pp-field{display:flex;flex-direction:column;gap:.3rem;color:var(--ink);font-size:.9rem}.pp-field span{display:flex;justify-content:space-between;gap:1rem;font-weight:600}.pp-field output{color:var(--muted);font-weight:400}.pp-field input{width:100%;accent-color:var(--accent)}.pp-toggle{display:flex;align-items:center;gap:.5rem;align-self:end;min-height:2rem;color:var(--ink);font-size:.9rem}.pp-toggle input{accent-color:var(--accent)}.pp-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem}.pp-actions .button{font-size:.9rem}.pp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;border-top:1px solid var(--line);margin-top:1.2rem;padding-top:1rem}.pp-stats span{display:flex;flex-direction:column;gap:.15rem}.pp-stats b,.pp-traits span{color:var(--muted);font-size:.8rem}.pp-stats strong{font-size:1.1rem;font-variant-numeric:tabular-nums}.pp-chart{margin-top:1rem}.pp-chart canvas{display:block;width:100%;height:130px}.pp-traits{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:.4rem 1rem;border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}.pp-traits h3{margin:0;color:var(--ink);font-size:.9rem}.pp-traits span{font-variant-numeric:tabular-nums}.pp-traits strong{color:var(--ink);font-weight:650}.pp-status{min-height:1.5em;margin:.8rem 0 0;color:#a33f3f}
+  .pp-demo{border:1px solid var(--line);border-radius:4px;background:var(--paper);padding:1.25rem;margin:1.75rem 0}.pp-note{margin:0 0 1rem}.pp-settings{margin:0 0 1rem;border:1px solid var(--line);border-radius:3px}.pp-settings summary{padding:.65rem .8rem;color:var(--ink);font-weight:650;cursor:pointer}.pp-settings .pp-controls{margin:0;padding:.8rem;border-top:1px solid var(--line)}.pp-world{border:1px solid var(--line);background:var(--wash);border-radius:3px;overflow:hidden}.pp-world canvas{display:block;width:100%;height:380px}.pp-seed-row{display:flex;align-items:end;gap:.6rem;margin-top:.85rem}.pp-seed-row[hidden]{display:none}.pp-seed-row label{display:flex;flex-direction:column;gap:.25rem;color:var(--muted);font-size:.82rem}.pp-seed-row input{width:10rem;border:1px solid var(--line);border-radius:3px;padding:.35rem .45rem;background:var(--paper);color:var(--ink);font:inherit}.pp-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem 1.5rem}.pp-field{display:flex;flex-direction:column;gap:.3rem;color:var(--ink);font-size:.9rem}.pp-field span{display:flex;justify-content:space-between;gap:1rem;font-weight:600}.pp-field output{color:var(--muted);font-weight:400}.pp-field input{width:100%;accent-color:var(--accent)}.pp-toggle{display:flex;align-items:center;gap:.5rem;align-self:end;min-height:2rem;color:var(--ink);font-size:.9rem}.pp-toggle input{accent-color:var(--accent)}.pp-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}.pp-actions .button{font-size:.9rem}.pp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;border-top:1px solid var(--line);margin-top:.8rem;padding-top:.8rem}.pp-stats span{display:flex;flex-direction:column;gap:.15rem}.pp-stats b,.pp-traits span{color:var(--muted);font-size:.8rem}.pp-stats strong{font-size:1.1rem;font-variant-numeric:tabular-nums}.pp-chart{margin-top:.8rem}.pp-chart canvas{display:block;width:100%;height:130px}.pp-traits{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:.4rem 1rem;border-top:1px solid var(--line);margin-top:1rem;padding-top:1rem}.pp-traits h3{margin:0;color:var(--ink);font-size:.9rem}.pp-traits span{font-variant-numeric:tabular-nums}.pp-traits strong{color:var(--ink);font-weight:650}.pp-status{min-height:1.5em;margin:.8rem 0 0;color:#a33f3f}
   @media(max-width:760px){.pp-demo{padding:1rem}.pp-world canvas{height:270px}.pp-controls{grid-template-columns:1fr}.pp-stats{grid-template-columns:repeat(3,1fr)}.pp-traits{grid-template-columns:1fr 1fr}.pp-traits h3{grid-column:1/-1;margin-top:.35rem}.pp-seed-row{align-items:stretch;flex-wrap:wrap}.pp-seed-row label{flex:1;min-width:9rem}}
 </style>
