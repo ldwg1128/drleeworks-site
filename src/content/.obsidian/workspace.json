@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "posts/ko/engineering/tensile-test-basics/index.md",
+                "file": "posts/ko/interactive/predator-prey/index.md",
                 "mode": "source",
                 "source": false
               },
@@ -188,12 +188,12 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "bf875a664b126460",
+  "active": "6b0a3052dfc3ecf3",
   "lastOpenFiles": [
+    "posts/ko/engineering/tensile-test-basics/index.md",
     "posts/ko/engineering/tensile-test-basics/Jaw.gif",
     "posts/ko/engineering/tensile-test-basics/testing-machine.png",
     "posts/ko/engineering/tensile-test-basics/Extensometer.png",
-    "posts/ko/engineering/tensile-test-basics/index.md",
     "ko/interactive/stress-strain-demo.md",
     "ko/interactive",
     "ko",
@@ -226,7 +226,6 @@
     "posts/ko/computing/astra-blender/image01.png",
     "posts/ko/computing/astra-blender/image08.png",
     "posts/ko/computing/astra-blender/image07.png",
-    "posts/ko/computing/astra-blender/image06.png",
     "2026-09-08.md"
   ]
 }
