@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "posts/ko/interactive/predator-prey/index.md",
+                "file": "posts/ko/notes/site-operation/index.md",
                 "mode": "source",
                 "source": false
               },
@@ -190,15 +190,24 @@
   },
   "active": "6b0a3052dfc3ecf3",
   "lastOpenFiles": [
+    "posts/en/engineering/tensile-test-basics/testing-machine.png",
+    "posts/en/engineering/tensile-test-basics/test.png",
+    "posts/en/engineering/tensile-test-basics/Stress-strain-curve.png",
+    "posts/en/engineering/tensile-test-basics/jaw.gif",
+    "posts/en/engineering/tensile-test-basics/frp-tensile-behavior.png",
+    "posts/en/engineering/tensile-test-basics/extensometer.png",
+    "posts/en/engineering/tensile-test-basics/index.md",
+    "posts/en/engineering/tensile-test-basics",
     "posts/ko/engineering/tensile-test-basics/index.md",
+    "posts/ko/engineering/tensile-test-basics/frp-tensile-behavior.png",
+    "posts/ko/engineering/tensile-test-basics/ChatGPT Image 2026년 9월 17일 오후 04_43_41.png",
+    "posts/ko/interactive/predator-prey/index.md",
     "posts/ko/engineering/tensile-test-basics/Jaw.gif",
     "posts/ko/engineering/tensile-test-basics/testing-machine.png",
     "posts/ko/engineering/tensile-test-basics/Extensometer.png",
     "ko/interactive/stress-strain-demo.md",
     "ko/interactive",
     "ko",
-    "posts/ko/engineering/tensile-test-basics/testing-machine0.png",
-    "posts/ko/engineering/tensile-test-basics/ChatGPT Image 2026년 9월 15일 오후 12_49_54.png",
     "images/tensile-test/testing.md",
     "images/tensile-test",
     "images",
@@ -216,16 +225,10 @@
     "posts/ko/computing/astra-blender/index.md",
     "posts/ko/recommendations/ffmpeg/index.md",
     "posts/en/records/site-operation/index.md",
-    "posts/en/records/site-operation",
     "posts/ko/records/site-operation/index.md",
     "posts/en/recommendations/vlc-media-player/index.md",
     "posts/ko/recommendations/vlc-media-player-example/index.md",
     "posts/ko/recommendations/vlc-media-player/index.md",
-    "posts/ko/computing/obsidian-figure-video/제임스웹 이미지.png",
-    "posts/ko/computing/astra-blender/image09.png",
-    "posts/ko/computing/astra-blender/image01.png",
-    "posts/ko/computing/astra-blender/image08.png",
-    "posts/ko/computing/astra-blender/image07.png",
     "2026-09-08.md"
   ]
 }
