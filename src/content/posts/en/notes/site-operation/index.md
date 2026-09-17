@@ -53,6 +53,10 @@ When issues are identified or superior solutions emerge through actual use, prog
 
 Documenting this iterative development journey itself is one of the core subjects DrLeeWorks aims to share.
 
+### Direction of In-House Software
+- Improve functions that were personally inconvenient in programs used previously.
+- Aim for operation with a minimum number of clicks. More sophisticated functions should therefore be handled by specialized software.
+
 ## 4. Prioritizing Practical Records Over Exhaustive Manuals
 
 The objective of this site is not to construct exhaustive reference manuals explaining every topic from start to finish.
@@ -60,6 +64,8 @@ The objective of this site is not to construct exhaustive reference manuals expl
 Instead, records focus on genuinely needed information, practical techniques, and problem-solving workflows.
 
 As a result, some articles may begin as concise usage notes and gradually evolve into more detailed documentation as additional experience is accumulated.
+
+Even when a problem is difficult to solve because little information is available or only a handful of similar cases exist, the site aims to publish the solution once it has been worked out.
 
 ## 5. Potential Errors and Omissions
 
@@ -91,4 +97,4 @@ Thus, each post on DrLeeWorks is both an independent article and **part of a gro
 
 ---
 
-**Last updated:** 2026-09-11
+**Last updated:** 2026-09-17
