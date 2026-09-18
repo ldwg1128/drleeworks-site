@@ -18,13 +18,14 @@ export const ui = {
     engineeringIntro: '재료, 해석, 실험 및 공학 도구에 관한 체계적인 노트입니다.',
     interactiveIntro: '직접 값을 조작하며 개념을 확인할 수 있는 인터랙티브 데모 모음입니다.',
     aboutHeading: '관심 있는 기술과 공학 이야기를 다룹니다',
-    aboutText: 'DrLeeWorks는 새로운 기술을 직접 사용해 보고, 그 과정에서 알게 된 내용과 경험을 기록하는 개인 사이트입니다.',
+    aboutText: '현재 기계공학 박사학위를 받은 후 연구 분야에 종사하고 있습니다.',
     aboutParagraphs: [
-      'AI와 새로운 도구를 활용해 필요한 프로그램을 직접 만들어 보기도 하고, 공학·연구 과정에서 얻은 전공 정보와 실무 경험도 함께 정리합니다.',
-      '이곳에서 공개하는 프로그램은 개인적인 필요와 아이디어에서 시작해 AI 도구를 적극 활용하여 제작하고 있습니다. 가능한 범위에서 테스트하고 개선하고 있지만, 예상하지 못한 오류가 있을 수 있습니다.',
-      '완성된 결과만 소개하기보다는 직접 사용하고, 만들고, 시행착오를 겪는 과정까지 기록하는 것을 목표로 합니다.'
+      '본 사이트에서는 연구 과정에서 얻은 전공 지식과 실무 경험을 제가 이해하기 편하고 쉬운 방식으로 정리하고자 합니다. 또한 공학 분야뿐만 아니라 개인적으로 유용하다고 생각했던 다양한 정보도 함께 기록하고 있습니다.',
+      '현재 컴퓨터 관련 분야에 종사하고 있지는 않지만, 80286 컴퓨터 시절부터 컴퓨터를 사용해오면서 새로운 컴퓨터 기술을 익히고 활용하는 것을 좋아해 왔습니다. 특히 최근 AI 기술의 발전으로 누구나 직접 소프트웨어를 만들어볼 수 있는 환경이 마련되면서, 기존 프로그램을 사용하며 기능이 아쉽거나 광고 등으로 불편했던 부분을 보완한 개인용 소프트웨어도 직접 만들어보고 있습니다.',
+      '이곳에서 공개하는 프로그램은 개인적인 필요와 아이디어에서 시작하여 AI 도구를 적극적으로 활용해 제작하고 있습니다. 가능한 범위에서 직접 테스트하고 지속적으로 개선하고 있지만, 예상하지 못한 오류가 있을 수 있습니다.',
+      '감사합니다.'
     ],
-    youtubeText: '새로운 기술과 프로그램 제작, 공학·연구 관련 내용을 영상으로도 기록합니다.',
+    youtubeText: '유튜브 채널에도 일부 영상을 올리고 있지만, 앞으로는 웹사이트를 중심으로 콘텐츠를 정리하고 활동할 예정입니다.',
     youtubeLink: 'YouTube 채널 보기'
   },
   en: {
@@ -42,14 +43,15 @@ export const ui = {
     softwareIntro: 'Software details, installers, checksums, and release history.',
     engineeringIntro: 'Structured notes on materials, analysis, experiments, and engineering utilities.',
     interactiveIntro: 'Hands-on interactive demos where you can adjust values and see concepts in action.',
-    aboutHeading: 'Exploring, Building, and Documenting New Technologies',
-    aboutText: 'DrLeeWorks is a personal site where I explore new technologies and document what I learn along the way.',
+    aboutHeading: 'Technology and Engineering Topics That Interest Me',
+    aboutText: 'I hold a Ph.D. in Mechanical Engineering and currently work in a research-related field.',
     aboutParagraphs: [
-      'I use AI and other tools to build programs for my own needs, while also sharing knowledge and practical experience from engineering and research.',
-      'The software shared here often begins with a personal need or idea and is developed with extensive use of AI tools. I test and improve it as much as possible, but unexpected bugs or issues may still occur.',
-      'Rather than sharing only finished results, DrLeeWorks aims to document the process of trying, building, learning, and improving along the way.'
+      'On this site, I organize the specialized knowledge and practical experience I have gained through my research in a way that is easy for me to understand and use. Along with engineering topics, I also document a range of information that I have found personally useful.',
+      'Although I do not currently work in a computer-related field, I have enjoyed learning and using new computer technologies since the days of the 80286 PC. Recent advances in AI have made it possible for anyone to create software, so I have also been building personal tools that address features I found lacking or inconveniences such as advertising in the programs I use.',
+      'The software shared here begins with personal needs and ideas and is created with extensive use of AI tools. I test and improve it as much as possible, but unexpected errors may still occur.',
+      'Thank you.'
     ],
-    youtubeText: 'I also share videos about new technologies, software projects, engineering, and research.',
+    youtubeText: 'I have uploaded some videos to my YouTube channel, but I plan to organize my content and focus my activities primarily on this website going forward.',
     youtubeLink: 'View YouTube Channel'
   }
 } as const;
